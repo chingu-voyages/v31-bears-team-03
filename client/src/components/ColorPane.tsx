@@ -13,8 +13,9 @@ const ColorPane = (props) =>{
     return (
         <div className ="ColorPane" style={{
             width: `${100 / props.length}vw`,
-            background: `#${props.color}`,
+            background: `${props.color}`,
           }}>
+              <Button/>
             {console.log(props.color, props.length)}
         </div>
     )

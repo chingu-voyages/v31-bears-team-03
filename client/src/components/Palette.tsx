@@ -6,12 +6,6 @@ import ColorPane from './ColorPane'
 
 function Palette({colors, setColors}) {
 
-  const [panelReady, setPanelReady] = useState(false)
-
-  useEffect(() => {
-    setPanelReady(true);
-  }, [])
-
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
