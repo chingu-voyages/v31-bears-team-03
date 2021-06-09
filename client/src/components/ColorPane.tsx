@@ -1,5 +1,13 @@
 //@ts-nocheck
 import React from 'react'
+import './ColorPane.css'
+
+const Button = () => {
+    return(
+        <p>Delete</p>
+    )
+}
+
 
 const ColorPane = (props) =>{
     return (

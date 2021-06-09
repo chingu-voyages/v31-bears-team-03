@@ -1,12 +1,16 @@
 //@ts-nocheck
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "./Palette.css";
 import ColorPane from './ColorPane'
 
-
-
 function Palette({colors, setColors}) {
+
+  const [panelReady, setPanelReady] = useState(false)
+
+  useEffect(() => {
+    setPanelReady(true);
+  }, [])
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
@@ -26,8 +30,8 @@ function Palette({colors, setColors}) {
               <div
                 ref={provided.innerRef}
                 {...provided.draggableProps}
-                {...provided.dragHandleProps}
               >
+                  <div {...provided.dragHandleProps}>&lt;- -&gt;</div>
                   <ColorPane color={color} length={colors.length}/>
               </div>
             )}
