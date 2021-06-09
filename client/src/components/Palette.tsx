@@ -2,18 +2,11 @@
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "./Palette.css";
+import ColorPane from './ColorPane'
 
-const colorsFromBackend = [
-  { color: "5EFC8D" },
-  { color: "8ef9f3" },
-  { color: "93BEDF" },
-  { color: "8377D1" },
-  { color: "6D5A72" },
-  { color: "83fedd" },
-];
 
-function Palette() {
-  const [colors, setColors] = useState(colorsFromBackend);
+
+function Palette({colors, setColors}) {
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
@@ -23,6 +16,26 @@ function Palette() {
     items.splice(result.destination.index, 0, reorderedItem);
     setColors(items);
   };
+
+  const displayDraggablePanels = () => {
+    return (
+      colors.map(({ id, color }, index) => {
+        return (
+          <Draggable key={color} draggableId={color} index={index}>
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+              >
+                  <ColorPane color={color} length={colors.length}/>
+              </div>
+            )}
+          </Draggable>
+        );
+      })
+    )
+  }
 
   return (
     <div className="Palette">
@@ -34,29 +47,7 @@ function Palette() {
               ref={provided.innerRef}
               style={{ width: "100%", display: "flex" }}
             >
-              {colors.map(({ id, color }, index) => {
-                return (
-                  <Draggable key={color} draggableId={color} index={index}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <div
-                          className="ColorPane"
-                          style={{
-                            width: `${100 / colors.length}vw`,
-                            background: `#${color}`,
-                          }}
-                        >
-                          {color}
-                        </div>
-                      </div>
-                    )}
-                  </Draggable>
-                );
-              })}
+              {displayDraggablePanels()}
               {provided.placeholder}
             </div>
           )}
