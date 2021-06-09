@@ -1,3 +1,10 @@
 .ColorPane {
   height: 100vh;
 }
+
+.Delete{
+    text-align:center;
+    margin:auto;
+    display:flex;
+    display:grid;
+}
