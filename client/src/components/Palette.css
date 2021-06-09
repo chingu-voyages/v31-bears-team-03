@@ -1,0 +1,13 @@
+.DropContainer{
+    height: 90vh;
+    width: 100vw;
+    padding: 4;
+}
+
+.ColorPane{
+    height: 100vh;
+}
+
+.Palette{
+    width:100%;
+}
