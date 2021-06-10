@@ -1,10 +1,10 @@
 //@ts-nocheck
 import React from "react";
 
-function DemoPage() {
+function DemoPage({ colors }) {
   return (
-    <div className="mt-20">
-      <h1>Demp Page</h1>
+    <div className="flex justify-center">
+      <h1 className="pt-20">Demp Page</h1>
     </div>
   );
 }
