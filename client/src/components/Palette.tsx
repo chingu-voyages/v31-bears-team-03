@@ -1,11 +1,10 @@
 //@ts-nocheck
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "./Palette.css";
-import ColorPane from './ColorPane'
+import ColorPane from "./ColorPane";
 
-function Palette({colors, setColors}) {
-
+function Palette({ colors, setColors }) {
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
@@ -16,24 +15,19 @@ function Palette({colors, setColors}) {
   };
 
   const displayDraggablePanels = () => {
-    return (
-      colors.map(({ id, color }, index) => {
-        return (
-          <Draggable key={color} draggableId={color} index={index}>
-            {(provided) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.draggableProps}
-              >
-                  <div {...provided.dragHandleProps}>&lt;- -&gt;</div>
-                  <ColorPane color={color} length={colors.length}/>
-              </div>
-            )}
-          </Draggable>
-        );
-      })
-    )
-  }
+    return colors.map(({ id, color }, index) => {
+      return (
+        <Draggable key={color} draggableId={color} index={index}>
+          {(provided) => (
+            <div ref={provided.innerRef} {...provided.draggableProps}>
+              <div {...provided.dragHandleProps}>&lt;- -&gt;</div>
+              <ColorPane color={color} length={colors.length} />
+            </div>
+          )}
+        </Draggable>
+      );
+    });
+  };
 
   return (
     <div className="Palette">

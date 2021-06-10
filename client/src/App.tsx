@@ -1,8 +1,13 @@
 //@ts-nocheck
-import chroma from 'chroma-js';
-import React, {useState} from 'react'
-import './App.css';
-import Palette from './components/Palette'
+import chroma from "chroma-js";
+import React, { useState } from "react";
+import { Switch, Route } from "react-router-dom";
+import "./App.css";
+import DemoPage from "./components/DemoPage";
+import LandingPage from "./components/LandingPage";
+import Navbar from "./components/Navbar";
+import PalettePage from "./components/PalettePage";
+import TemplatesPage from "./components/TemplatesPage";
 
 const colorsFromBackend = [
   { color: "#5EFC8D" },
@@ -13,37 +18,54 @@ const colorsFromBackend = [
   { color: "#83fedd" },
 ];
 
-
 function App() {
-  const [colors, setColors] = useState(colorsFromBackend)
+  const [colors, setColors] = useState(colorsFromBackend);
 
   const generatePalette = () => {
-    let first = chroma.random().hex()
-    let second = chroma.random().hex()
-    let palette = chroma.scale([first, second]).mode('lch').colors(colors.length)
-    let newArray = []
-    palette.map(color => {
-      newArray.push({color: color})
-    })
+    let first = chroma.random().hex();
+    let second = chroma.random().hex();
+    let palette = chroma
+      .scale([first, second])
+      .mode("lch")
+      .colors(colors.length);
+    let newArray = [];
+    palette.map((color) => {
+      newArray.push({ color: color });
+    });
 
-    setColors(newArray)
-  }
+    setColors(newArray);
+  };
 
-  const addColor =() => {
-    let rand = "#"+Math.floor(Math.random()*16777215).toString(16)
+  const addColor = () => {
+    let rand = "#" + Math.floor(Math.random() * 16777215).toString(16);
     let newColor = {
-      color: rand
-    }
-    setColors(colors => [...colors, newColor])
-  }
-  
+      color: rand,
+    };
+    setColors((colors) => [...colors, newColor]);
+  };
+
   return (
     <div className="App">
-      {console.log(colors)}
-      <button onClick={generatePalette}>Generate</button>
-      <br/>
-      <button onClick={addColor}>Add</button>
-      <Palette colors={colors} setColors={setColors}/>
+      <Navbar />
+      <Switch>
+        <Route exact path="/">
+          <LandingPage />
+        </Route>
+        <Route exact path="/palette">
+          <PalettePage
+            colors={colors}
+            setColors={setColors}
+            generatePalette={generatePalette}
+            addColor={addColor}
+          />
+        </Route>
+        <Route exact path="/demo">
+          <DemoPage colors={colors} />
+        </Route>
+        <Route exact path="/templates">
+          <TemplatesPage />
+        </Route>
+      </Switch>
     </div>
   );
 }
