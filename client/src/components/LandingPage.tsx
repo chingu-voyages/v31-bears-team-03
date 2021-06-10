@@ -10,7 +10,7 @@ function Landing() {
           Welcome to UNNAMED APP!
         </h1>
       </div>
-      <div className="mt-20">
+      <div className="flex justify-center mt-20">
         <p>*Description of app here*</p>
       </div>
       <div className="flex justify-center mt-40 text-xl">
