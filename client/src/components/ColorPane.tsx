@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import React from 'react'
 import './ColorPane.css'
 
@@ -8,15 +8,19 @@ const Button = () => {
     )
 }
 
+interface Props {
+    color: string,
+    length: number
+}
 
-const ColorPane = (props) =>{
+const ColorPane: React.FC<Props> = ({color, length}) => {
     return (
         <div className ="ColorPane" style={{
-            width: `${100 / props.length}vw`,
-            background: `${props.color}`,
+            width: `${100 / length}vw`,
+            background: `${color}`,
           }}>
               <Button/>
-            {console.log(props.color, props.length)}
+            {console.log(color, length)}
         </div>
     )
 }
