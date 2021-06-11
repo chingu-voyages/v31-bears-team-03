@@ -4,12 +4,14 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "./Palette.css";
 import ColorPane from "./ColorPane";
 
-interface Props {
-  colors: object[],
+interface PaletteProps {
+  colors: {
+    color: string  
+  }[],
   setColors: ([]) => void
 }
 
-const Palette: React.FC<Props> = ({ colors, setColors }) => {
+const Palette = ({ colors, setColors }: PaletteProps) => {
   const onDragEnd = (result: any) => {
     if (!result.destination) return;
 

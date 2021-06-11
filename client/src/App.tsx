@@ -8,6 +8,11 @@ import Navbar from "./components/Navbar";
 import PalettePage from "./components/PalettePage";
 import TemplatesPage from "./components/TemplatesPage";
 
+interface IState {
+  colors: {
+    color: string  
+  }[]
+}
 
 const colorsFromBackend = [
   { color: "#5EFC8D" },
@@ -19,7 +24,7 @@ const colorsFromBackend = [
 ];
 
 function App() {
-  const [colors, setColors] = useState<object[]>(colorsFromBackend);
+  const [colors, setColors] = useState<IState["colors"]>(colorsFromBackend);
 
   const generatePalette = () => {
     let first = chroma.random().hex();
@@ -28,7 +33,7 @@ function App() {
       .scale([first, second])
       .mode("lch")
       .colors(colors.length);
-    let newArray: object[] = [];
+    let newArray: IState['colors'] = [];
     palette.map((color) => {
       newArray.push({ color: color });
     });
