@@ -1,5 +1,5 @@
 //@ts-nocheck
-import chroma, { hex } from "chroma-js";
+import chroma from "chroma-js";
 import React, { useState, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import "./App.css";
@@ -34,40 +34,8 @@ function App() {
     generatePalette()
   },[colorMode])
 
-  const monochrome = async () => {
-    setColorMode('monochrome')
-  }
-
-  const analogic = () => {
-    setColorMode('analogic')
-  }
-
-  const triad = () => {
-    setColorMode('triad')
-  }
-
-  const monochromeDark = () => {
-    setColorMode('monochrome-dark')
-  }
-
-  const monochromeLight = () => {
-    setColorMode('monochrome-light')
-  }
-
-  const complement = () => {
-    setColorMode('complement')
-  }
-
-  const analogicComplement = () => {
-    setColorMode('analogic-complement')
-  }
-
-  const quad = () => {
-    setColorMode('quad')
-  }
-
   const generatePalette = async () => {
-    let first = chroma.random().hex().substring(1)
+    let first = chroma.random().brighten().saturate(3).hex().substring(1)
     let response = colorService.getPalette(first, colorMode, colors.length)
     let returnedArray = (await response).data.colors
     let newArray = []
@@ -90,14 +58,14 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      <button style={{marginRight: "2%"}} onClick={analogic}>Analogic </button>
-      <button style={{marginRight: "2%"}} onClick={analogicComplement}>Analogic Complement </button>
-      <button style={{marginRight: "2%"}} onClick={monochrome}>Monochrome </button>
-      <button style={{marginRight: "2%"}} onClick={triad}>Triadic </button>
-      <button style={{marginRight: "2%"}} onClick={quad}>Quadratic </button>
-      <button style={{marginRight: "2%"}} onClick={complement}>Complement </button>
-      <button style={{marginRight: "2%"}}onClick={monochromeDark}>Monochrome Dark </button>
-      <button style={{marginRight: "2%"}} onClick={monochromeLight}>Monochrome Light </button>
+      <button style={{marginRight: "2%"}} onClick={() => setColorMode('analogic')}>Analogic </button>
+      <button style={{marginRight: "2%"}} onClick={() => setColorMode('analogic-complement')}>Analogic Complement </button>
+      <button style={{marginRight: "2%"}} onClick={() => setColorMode('triad')}>Triadic </button>
+      <button style={{marginRight: "2%"}} onClick={() => setColorMode('quad')}>Quadratic </button>
+      <button style={{marginRight: "2%"}} onClick={() => setColorMode('complement')}>Complement </button>
+      <button style={{marginRight: "2%"}} onClick={() => setColorMode('monochrome')}>Monochrome </button>
+      <button style={{marginRight: "2%"}} onClick={() => setColorMode('monochrome-dark')}>Monochrome Dark </button>
+      <button style={{marginRight: "2%"}} onClick={() => setColorMode('monochrome-light')}>Monochrome Light </button>
       <button style={{marginRight: "2%"}} onClick={generatePalette}>generatePalette </button>
       <button style={{marginRight: "2%"}} onClick ={addColor}>Add Colors </button>
       <Switch>
