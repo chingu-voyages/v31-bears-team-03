@@ -1,4 +1,3 @@
-//@ts-nocheck
 import chroma from "chroma-js";
 import React, { useState } from "react";
 import { Switch, Route } from "react-router-dom";
@@ -8,6 +7,7 @@ import LandingPage from "./components/LandingPage";
 import Navbar from "./components/Navbar";
 import PalettePage from "./components/PalettePage";
 import TemplatesPage from "./components/TemplatesPage";
+
 
 const colorsFromBackend = [
   { color: "#5EFC8D" },
@@ -19,7 +19,7 @@ const colorsFromBackend = [
 ];
 
 function App() {
-  const [colors, setColors] = useState(colorsFromBackend);
+  const [colors, setColors] = useState<object[]>(colorsFromBackend);
 
   const generatePalette = () => {
     let first = chroma.random().hex();
@@ -28,7 +28,7 @@ function App() {
       .scale([first, second])
       .mode("lch")
       .colors(colors.length);
-    let newArray = [];
+    let newArray: object[] = [];
     palette.map((color) => {
       newArray.push({ color: color });
     });
