@@ -20,7 +20,6 @@ const ColorPane = ({color, length}:ColorPaneProps) => {
             background: `${color}`,
           }}>
               <Button/>
-            {console.log(color, length)}
         </div>
     )
 }

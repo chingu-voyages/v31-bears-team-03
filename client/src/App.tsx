@@ -1,5 +1,6 @@
-import chroma from "chroma-js";
-import React, { useState } from "react";
+//@ts-nocheck
+import chroma, { hex } from "chroma-js";
+import React, { useState, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import "./App.css";
 import DemoPage from "./components/DemoPage";
@@ -7,6 +8,8 @@ import LandingPage from "./components/LandingPage";
 import Navbar from "./components/Navbar";
 import PalettePage from "./components/PalettePage";
 import TemplatesPage from "./components/TemplatesPage";
+
+import colorService from "./services/colorService";
 
 interface IState {
   colors: {
@@ -20,25 +23,60 @@ const colorsFromBackend = [
   { color: "#93BEDF" },
   { color: "#8377D1" },
   { color: "#6D5A72" },
-  { color: "#83fedd" },
 ];
+
 
 function App() {
   const [colors, setColors] = useState<IState["colors"]>(colorsFromBackend);
+  const [colorMode, setColorMode] = useState<string>('monochrome')
 
-  const generatePalette = () => {
-    let first = chroma.random().hex();
-    let second = chroma.random().hex();
-    let palette = chroma
-      .scale([first, second])
-      .mode("lch")
-      .colors(colors.length);
-    let newArray: IState['colors'] = [];
-    palette.map((color) => {
-      newArray.push({ color: color });
-    });
+  useEffect(() => {
+    generatePalette()
+  },[colorMode])
 
-    setColors(newArray);
+  const monochrome = async () => {
+    setColorMode('monochrome')
+  }
+
+  const analogic = () => {
+    setColorMode('analogic')
+  }
+
+  const triad = () => {
+    setColorMode('triad')
+  }
+
+  const monochromeDark = () => {
+    setColorMode('monochrome-dark')
+  }
+
+  const monochromeLight = () => {
+    setColorMode('monochrome-light')
+  }
+
+  const complement = () => {
+    setColorMode('complement')
+  }
+
+  const analogicComplement = () => {
+    setColorMode('analogic-complement')
+  }
+
+  const quad = () => {
+    setColorMode('quad')
+  }
+
+  const generatePalette = async () => {
+    let first = chroma.random().hex().substring(1)
+    let response = colorService.getPalette(first, colorMode, colors.length)
+    let returnedArray = (await response).data.colors
+    let newArray = []
+    for(let i = 0; i<returnedArray.length; i++){
+      newArray.push({color: returnedArray[i].hex.value})
+    }
+    setColors(newArray)
+    console.log(newArray)
+
   };
 
   const addColor = () => {
@@ -52,6 +90,16 @@ function App() {
   return (
     <div className="App">
       <Navbar />
+      <button style={{marginRight: "2%"}} onClick={analogic}>Analogic </button>
+      <button style={{marginRight: "2%"}} onClick={analogicComplement}>Analogic Complement </button>
+      <button style={{marginRight: "2%"}} onClick={monochrome}>Monochrome </button>
+      <button style={{marginRight: "2%"}} onClick={triad}>Triadic </button>
+      <button style={{marginRight: "2%"}} onClick={quad}>Quadratic </button>
+      <button style={{marginRight: "2%"}} onClick={complement}>Complement </button>
+      <button style={{marginRight: "2%"}}onClick={monochromeDark}>Monochrome Dark </button>
+      <button style={{marginRight: "2%"}} onClick={monochromeLight}>Monochrome Light </button>
+      <button style={{marginRight: "2%"}} onClick={generatePalette}>generatePalette </button>
+      <button style={{marginRight: "2%"}} onClick ={addColor}>Add Colors </button>
       <Switch>
         <Route exact path="/">
           <LandingPage />
@@ -60,8 +108,6 @@ function App() {
           <PalettePage
             colors={colors}
             setColors={setColors}
-            generatePalette={generatePalette}
-            addColor={addColor}
           />
         </Route>
         <Route exact path="/demo">
