@@ -35,7 +35,7 @@ function App() {
   },[colorMode])
 
   const generatePalette = async () => {
-    let first = chroma.random().brighten().saturate(3).hex().substring(1)
+    let first = chroma.random().hex().substring(1)
     let response = colorService.getPalette(first, colorMode, colors.length)
     let returnedArray = (await response).data.colors
     let newArray = []
@@ -58,16 +58,6 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      <button style={{marginRight: "2%"}} onClick={() => setColorMode('analogic')}>Analogic </button>
-      <button style={{marginRight: "2%"}} onClick={() => setColorMode('analogic-complement')}>Analogic Complement </button>
-      <button style={{marginRight: "2%"}} onClick={() => setColorMode('triad')}>Triadic </button>
-      <button style={{marginRight: "2%"}} onClick={() => setColorMode('quad')}>Quadratic </button>
-      <button style={{marginRight: "2%"}} onClick={() => setColorMode('complement')}>Complement </button>
-      <button style={{marginRight: "2%"}} onClick={() => setColorMode('monochrome')}>Monochrome </button>
-      <button style={{marginRight: "2%"}} onClick={() => setColorMode('monochrome-dark')}>Monochrome Dark </button>
-      <button style={{marginRight: "2%"}} onClick={() => setColorMode('monochrome-light')}>Monochrome Light </button>
-      <button style={{marginRight: "2%"}} onClick={generatePalette}>generatePalette </button>
-      <button style={{marginRight: "2%"}} onClick ={addColor}>Add Colors </button>
       <Switch>
         <Route exact path="/">
           <LandingPage />
@@ -76,10 +66,13 @@ function App() {
           <PalettePage
             colors={colors}
             setColors={setColors}
+            setColorMode={setColorMode}
+            addColor={addColor}
+            generatePalette={generatePalette}
           />
         </Route>
         <Route exact path="/demo">
-          <DemoPage colors={colors} />
+          <DemoPage colors={colors} setColorMode={setColorMode} generatePalette={generatePalette}/>
         </Route>
         <Route exact path="/templates">
           <TemplatesPage />
