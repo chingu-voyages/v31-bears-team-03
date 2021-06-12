@@ -1,11 +1,12 @@
 //@ts-nocheck
 import React from "react";
 import Palette from "./Palette";
+import OptionsBar from "./OptionsBar"
 
-function PalettePage({ colors, setColors}) {
+function PalettePage({ colors, setColors, setColorMode, generatePalette, addColor}) {
   return (
     <div>
-      {console.log(colors)}
+      <OptionsBar setColorMode={setColorMode} generatePalette={generatePalette} addColor={addColor}/>
       <Palette colors={colors} setColors={setColors} />
     </div>
   );
