@@ -12,7 +12,9 @@ function Navbar() {
           </h1>
         </div>
         <div className="mx-4">
-          <NavLink to="/palette">Palette</NavLink>
+          <NavLink to="/palette/5EFC8D-8ef9f3-8377D1-93BEDF-6D5A72">
+            Palette
+          </NavLink>
         </div>
         <div className="mx-4">
           <NavLink to="/demo">Demo</NavLink>

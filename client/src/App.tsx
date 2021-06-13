@@ -1,13 +1,7 @@
 //@ts-nocheck
 import chroma from "chroma-js";
 import React, { useState, useEffect } from "react";
-import {
-  Switch,
-  Route,
-  useHistory,
-  useParams,
-  useLocation,
-} from "react-router-dom";
+import { Switch, Route, useHistory, useLocation } from "react-router-dom";
 import "./App.css";
 import DemoPage from "./components/DemoPage";
 import LandingPage from "./components/LandingPage";
@@ -32,49 +26,16 @@ const colorsFromBackend = [
 ];
 
 function App() {
-  let history = useHistory();
-  const location = useLocation();
-  console.log("location", location);
-
   const [colors, setColors] = useState<IState["colors"]>([]);
   const [colorMode, setColorMode] = useState<string>(null);
 
-  const hasColorSlug = true;
+  const history = useHistory();
+  const location = useLocation();
 
-  const getColorSlug = (colors) => {
-    const colorSlug = location.pathname.split("/")[2];
-    if (colorSlug.length) {
-      if (colors.length) {
-        return colors
-          .map((el) => el.color)
-          .join("")
-          .replaceAll("#", "-")
-          .slice(1);
-      }
-      return colorSlug;
-    } else {
-      return "5EFC8D-7F270E-AE3512-DD4216-ED6139";
-    }
-  };
-
-  const colorObjFromSlug = (colorSlug) => {
-    const colors = [];
-    colorSlug.split("-").forEach((el) => colors.push({ color: "#" + el }));
-    return colors;
-  };
-
-  const currentColors = (colors) => {
-    if (hasColorSlug) {
-      const slug = getColorSlug(colors);
-      colors = colorObjFromSlug(slug);
-    } else {
-      colors = colorsFromBackend;
-    }
-    return colors;
-  };
+  const colorSlug = location.pathname.split("/")?.[2];
 
   useEffect(() => {
-    setColors(currentColors(colors));
+    setColors(colorService.currentColors(colors, colorSlug, colorsFromBackend));
   }, []);
 
   useEffect(() => {
@@ -90,7 +51,6 @@ function App() {
       newArray.push({ color: returnedArray[i].hex.value });
     }
     setColors(newArray);
-    console.log("newArray", newArray);
   };
 
   const addColor = () => {
@@ -102,8 +62,12 @@ function App() {
   };
 
   useEffect(() => {
-    const colorSlug = getColorSlug(colors);
-    history.push(`/palette/${colorSlug}`);
+    const slug = colorService.getColorSlug(colors, colorSlug);
+    if (location.pathname.startsWith(`/palette`)) {
+      history.replace(`/palette/${slug}`);
+    } else if (location.pathname.startsWith(`/demo`)) {
+      history.replace(`/demo/${slug}`);
+    }
   }, [colors]);
 
   if (colors.length === 0) {
@@ -117,7 +81,7 @@ function App() {
         <Route exact path="/">
           <LandingPage />
         </Route>
-        <Route exact path={`/palette/:${getColorSlug(colors)}`}>
+        <Route exact path={`/palette/:colorSlug`}>
           <PalettePage
             colors={colors}
             setColors={setColors}
@@ -126,7 +90,7 @@ function App() {
             generatePalette={generatePalette}
           />
         </Route>
-        <Route exact path={`/demo/:${getColorSlug(colors)}`}>
+        <Route exact path={`/demo/:colorSlug}`}>
           <DemoPage
             colors={colors}
             setColorMode={setColorMode}
