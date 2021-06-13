@@ -7,7 +7,7 @@ import DemoPage from "./components/DemoPage";
 import LandingPage from "./components/LandingPage";
 import Navbar from "./components/Navbar";
 import PalettePage from "./components/PalettePage";
-import TemplatesPage from "./components/TemplatesPage";
+import ExplorePage from "./components/ExplorePage";
 
 import colorService from "./services/colorService";
 
@@ -98,7 +98,7 @@ function App() {
           />
         </Route>
         <Route exact path="/templates">
-          <TemplatesPage />
+          <ExplorePage />
         </Route>
       </Switch>
     </div>

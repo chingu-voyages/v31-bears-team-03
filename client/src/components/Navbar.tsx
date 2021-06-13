@@ -20,7 +20,7 @@ function Navbar() {
           <NavLink to="/demo">Demo</NavLink>
         </div>
         <div className="mx-4">
-          <NavLink to="/templates">Templates</NavLink>
+          <NavLink to="/explore">Explore</NavLink>
         </div>
       </div>
       <div className="mx-4">
