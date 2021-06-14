@@ -14,7 +14,7 @@ function Landing() {
         <p>*Description of app here*</p>
       </div>
       <div className="flex justify-center mt-40 text-xl">
-        <Link to="/palette">
+        <Link to="/palette/5EFC8D-8ef9f3-8377D1-93BEDF-6D5A72">
           <button className="bg-blue-900 opacity-90 p-6 rounded-full text-white transition duration-300 hover:opacity-100">
             Generate Palette
           </button>

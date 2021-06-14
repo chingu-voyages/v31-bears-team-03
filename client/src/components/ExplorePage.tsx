@@ -1,7 +1,7 @@
 //@ts-nocheck
 import React from "react";
 
-function TemplatesPage() {
+function ExplorePage() {
   return (
     <div className="mt-20">
       <h1>Templates Page</h1>
@@ -9,4 +9,4 @@ function TemplatesPage() {
   );
 }
 
-export default TemplatesPage;
+export default ExplorePage;
