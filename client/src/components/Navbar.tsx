@@ -1,8 +1,9 @@
 //@ts-nocheck
 import React from "react";
 import { NavLink } from "react-router-dom";
+import colorService from "../services/colorService";
 
-function Navbar() {
+function Navbar({ colors }) {
   return (
     <div className="flex justify-between items-center shadow-lg">
       <div className="flex justify-between items-center my-4">
@@ -12,7 +13,7 @@ function Navbar() {
           </h1>
         </div>
         <div className="mx-4">
-          <NavLink to="/palette/5EFC8D-8ef9f3-8377D1-93BEDF-6D5A72">
+          <NavLink to={`/palette/${colorService.getColorSlug(colors)}`}>
             Palette
           </NavLink>
         </div>

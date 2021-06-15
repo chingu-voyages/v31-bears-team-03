@@ -31,11 +31,14 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
-    const colorSlug = location.pathname.split("/")?.[2];
-    const initialColors = colorSlug
-      ? colorService.getColorsArrFromSlug(colorSlug)
-      : colorsFromBackend;
-    setColors(initialColors);
+    const getInitialColors = async () => {
+      const colorSlug = location.pathname.split("/")?.[2];
+      const initialColors = colorSlug
+        ? colorService.getColorsArrFromSlug(colorSlug)
+        : await colorService.generatePalette("monochrome");
+      setColors(initialColors);
+    };
+    getInitialColors();
   }, []);
 
   useEffect(() => {
@@ -64,7 +67,11 @@ function App() {
   };
 
   const addColor = () => {
-    let rand = "#" + Math.floor(Math.random() * 16777215).toString(16);
+    let rand =
+      "#" +
+      Math.floor(Math.random() * 16777215)
+        .toString(16)
+        .toUpperCase();
     let newColor = {
       color: rand,
     };
@@ -77,7 +84,7 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar />
+      <Navbar colors={colors} />
       <Switch>
         <Route exact path="/">
           <LandingPage setColors={setColors} colorMode={colorMode} />
