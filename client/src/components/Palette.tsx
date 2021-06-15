@@ -28,7 +28,7 @@ const Palette = ({ colors, setColors }: PaletteProps) => {
         <Draggable key={color} draggableId={color} index={index}>
           {(provided) => (
             <div ref={provided.innerRef} {...provided.draggableProps}>
-              <div {...provided.dragHandleProps}>&lt;- -&gt;</div>
+              <div style={{background: `${color}`}}{...provided.dragHandleProps}>&lt;- -&gt;</div>
               <ColorPane color={color} length={colors.length} />
             </div>
           )}
