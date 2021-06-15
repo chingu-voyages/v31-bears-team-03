@@ -1,14 +1,12 @@
-//@ts-nocheck
-import chroma from "chroma-js";
 import React, { useState, useEffect } from "react";
 import { Switch, Route, useHistory, useLocation } from "react-router-dom";
 import "./App.css";
+import chroma from "chroma-js";
 import DemoPage from "./components/DemoPage";
 import LandingPage from "./components/LandingPage";
 import Navbar from "./components/Navbar";
 import PalettePage from "./components/PalettePage";
 import ExplorePage from "./components/ExplorePage";
-
 import colorService from "./services/colorService";
 
 interface IState {
@@ -27,20 +25,31 @@ const colorsFromBackend = [
 
 function App() {
   const [colors, setColors] = useState<IState["colors"]>([]);
-  const [colorMode, setColorMode] = useState<string>(null);
+  const [colorMode, setColorMode] = useState<string>("monochrome");
 
   const history = useHistory();
   const location = useLocation();
 
-  const colorSlug = location.pathname.split("/")?.[2];
-
   useEffect(() => {
-    setColors(colorService.currentColors(colors, colorSlug, colorsFromBackend));
+    const colorSlug = location.pathname.split("/")?.[2];
+    const initialColors = colorSlug
+      ? colorService.getColorsArrFromSlug(colorSlug)
+      : colorsFromBackend;
+    setColors(initialColors);
   }, []);
 
   useEffect(() => {
     generatePalette();
   }, [colorMode]);
+
+  useEffect(() => {
+    const colorSlug = colorService.getColorSlug(colors);
+    if (location.pathname.startsWith(`/palette`)) {
+      history.replace(`/palette/${colorSlug}`);
+    } else if (location.pathname.startsWith(`/demo`)) {
+      history.replace(`/demo/${colorSlug}`);
+    }
+  }, [colors]);
 
   const generatePalette = async () => {
     let first = chroma.random().hex().substring(1);
@@ -50,6 +59,7 @@ function App() {
     for (let i = 0; i < returnedArray.length; i++) {
       newArray.push({ color: returnedArray[i].hex.value });
     }
+    if (colors.length === 0) return;
     setColors(newArray);
   };
 
@@ -61,15 +71,6 @@ function App() {
     setColors((colors) => [...colors, newColor]);
   };
 
-  useEffect(() => {
-    const slug = colorService.getColorSlug(colors, colorSlug);
-    if (location.pathname.startsWith(`/palette`)) {
-      history.replace(`/palette/${slug}`);
-    } else if (location.pathname.startsWith(`/demo`)) {
-      history.replace(`/demo/${slug}`);
-    }
-  }, [colors]);
-
   if (colors.length === 0) {
     return null;
   }
@@ -79,7 +80,7 @@ function App() {
       <Navbar />
       <Switch>
         <Route exact path="/">
-          <LandingPage />
+          <LandingPage setColors={setColors} colorMode={colorMode} />
         </Route>
         <Route exact path={`/palette/:colorSlug`}>
           <PalettePage
