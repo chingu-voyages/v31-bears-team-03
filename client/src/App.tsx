@@ -15,14 +15,6 @@ interface IState {
   }[];
 }
 
-const colorsFromBackend = [
-  { color: "#5EFC8D" },
-  { color: "#8ef9f3" },
-  { color: "#93BEDF" },
-  { color: "#8377D1" },
-  { color: "#6D5A72" },
-];
-
 function App() {
   const [colors, setColors] = useState<IState["colors"]>([]);
   const [colorMode, setColorMode] = useState<string>("monochrome");
