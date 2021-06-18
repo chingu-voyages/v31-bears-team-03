@@ -1,47 +1,62 @@
 //@ts-nocheck
-import React, { useState, useEffect } from 'react'
-import './ColorPane.css'
-import chroma from 'chroma-js'
-import Hue from './Hue'
+import React, { useState, useEffect } from "react";
+import "./ColorPane.css";
+import chroma from "chroma-js";
+import Hue from "./Hue";
 
 interface ColorPaneProps {
-  color: string
-  length: number
+  color: string;
+  length: number;
+  colors: {
+    color: string;
+  }[];
+  setColors: ([]) => void;
 }
 
-const ColorPane = ({ color, length }: ColorPaneProps) => {
-  const [light, setLight] = useState(false)
-  const [showHue, setShowHue] = useState(false)
-  const [newColor, setNewColor] = useState(color)
+const ColorPane = ({ color, length, colors, setColors }: ColorPaneProps) => {
+  const [light, setLight] = useState(false);
+  const [showHue, setShowHue] = useState(false);
+  const [newColor, setNewColor] = useState(color);
+  const [oldColor, setOldColor] = useState(color);
 
-  color = newColor
+  color = newColor;
+
+  const getNewColors = (colors, newColor) => {
+    return colors.map((el) =>
+      el.color === oldColor
+        ? { id: el.id, color: newColor }
+        : { id: el.id, color: el.color }
+    );
+  };
 
   useEffect(() => {
-    checkColor({ color })
-  }, [newColor])
+    checkColor({ color });
+    const newColors = getNewColors(colors, newColor);
+    setColors(newColors);
+  }, [newColor]);
 
   const checkColor = ({ color }: any) => {
-    let format = color.substring(1)
-    let rgb = parseInt(format, 16)
-    let r = (rgb >> 16) & 0xff
-    let g = (rgb >> 8) & 0xff
-    let b = (rgb >> 0) & 0xff
+    let format = color.substring(1);
+    let rgb = parseInt(format, 16);
+    let r = (rgb >> 16) & 0xff;
+    let g = (rgb >> 8) & 0xff;
+    let b = (rgb >> 0) & 0xff;
 
-    let luma = (0.299 * r + 0.587 * g + 0.114 * b) / 225
+    let luma = (0.299 * r + 0.587 * g + 0.114 * b) / 225;
     if (luma < 0.5) {
-      return setLight(true)
+      return setLight(true);
     } else {
-      return setLight(false)
+      return setLight(false);
     }
-  }
-  let scaleArr = []
+  };
+  let scaleArr = [];
 
   for (let i = 2; i > 0.1; i -= 0.2) {
     scaleArr.push(
       chroma(`${color.substring(1)}`)
         .darken(i)
         .hex()
-    )
+    );
   }
 
   for (let i = 0.1; i < 2; i += 0.2) {
@@ -49,16 +64,17 @@ const ColorPane = ({ color, length }: ColorPaneProps) => {
       chroma(`${color.substring(1)}`)
         .brighten(i)
         .hex()
-    )
+    );
   }
 
   const setNewColorButton = (color) => {
-    setNewColor(color)
-  }
+    setOldColor(newColor);
+    setNewColor(color);
+  };
 
   const setShowHueButton = () => {
-    setShowHue(false)
-  }
+    setShowHue(false);
+  };
   return (
     <div>
       {showHue ? (
@@ -77,12 +93,12 @@ const ColorPane = ({ color, length }: ColorPaneProps) => {
                 setShowHueButton={setShowHueButton}
                 key={i}
               />
-            )
+            );
           })}
         </div>
       ) : (
         <div
-          className='ColorPane'
+          className="ColorPane"
           style={{
             width: `${100 / length}vw`,
             background: `${color}`,
@@ -91,18 +107,18 @@ const ColorPane = ({ color, length }: ColorPaneProps) => {
           {light ? (
             <button
               onClick={() => {
-                navigator.clipboard.writeText(color)
+                navigator.clipboard.writeText(color);
               }}
-              style={{ outline: 'none', fontSize: '2em', color: 'white' }}
+              style={{ outline: "none", fontSize: "2em", color: "white" }}
             >
               {color}
             </button>
           ) : (
             <button
               onClick={() => {
-                navigator.clipboard.writeText(color)
+                navigator.clipboard.writeText(color);
               }}
-              style={{ outline: 'none', fontSize: '2em', color: 'black' }}
+              style={{ outline: "none", fontSize: "2em", color: "black" }}
             >
               {color}
             </button>
@@ -110,7 +126,7 @@ const ColorPane = ({ color, length }: ColorPaneProps) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ColorPane
+export default ColorPane;

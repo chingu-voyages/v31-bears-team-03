@@ -1,8 +1,11 @@
+//@ts-nocheck
 import axios from "axios";
 import chroma from "chroma-js";
+import { v4 as uuidv4 } from "uuid";
+
 const baseUrl = "https://www.thecolorapi.com/";
 
-type Colors = { color: string }[];
+type Colors = { id: string; color: string }[];
 
 const getPalette = (color: string, mode: string, count: number) => {
   let response = axios.get(
@@ -17,7 +20,7 @@ const generatePalette = async (colorMode: string) => {
   const returnedArray = response.data.colors;
   const newArray = [];
   for (let i = 0; i < returnedArray.length; i++) {
-    newArray.push({ color: returnedArray[i].hex.value });
+    newArray.push({ id: uuidv4(), color: returnedArray[i].hex.value });
   }
   return newArray;
 };
@@ -32,7 +35,9 @@ const getColorSlug = (colors: Colors) => {
 
 const getColorsArrFromSlug = (colorSlug: string) => {
   const colorsArr: Colors = [];
-  colorSlug.split("-").forEach((el) => colorsArr.push({ color: "#" + el }));
+  colorSlug
+    .split("-")
+    .forEach((el) => colorsArr.push({ id: uuidv4(), color: "#" + el }));
   return colorsArr;
 };
 

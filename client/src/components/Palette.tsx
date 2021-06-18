@@ -1,4 +1,3 @@
-
 import React from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "./Palette.css";
@@ -6,9 +5,9 @@ import ColorPane from "./ColorPane";
 
 interface PaletteProps {
   colors: {
-    color: string  
-  }[],
-  setColors: ([]) => void
+    color: string;
+  }[];
+  setColors: ([]) => void;
 }
 
 const Palette = ({ colors, setColors }: PaletteProps) => {
@@ -23,13 +22,18 @@ const Palette = ({ colors, setColors }: PaletteProps) => {
 
   const displayDraggablePanels = () => {
     //@ts-ignore
-    return colors.map(({color}, index) => {
+    return colors.map(({ id, color }, index) => {
       return (
-        <Draggable key={color} draggableId={color} index={index}>
+        <Draggable key={id} draggableId={id} index={index}>
           {(provided) => (
             <div ref={provided.innerRef} {...provided.draggableProps}>
               <div {...provided.dragHandleProps}>&lt;- -&gt;</div>
-              <ColorPane color={color} length={colors.length} />
+              <ColorPane
+                color={color}
+                colors={colors}
+                setColors={setColors}
+                length={colors.length}
+              />
             </div>
           )}
         </Draggable>
@@ -55,6 +59,6 @@ const Palette = ({ colors, setColors }: PaletteProps) => {
       </DragDropContext>
     </div>
   );
-}
+};
 
 export default Palette;
