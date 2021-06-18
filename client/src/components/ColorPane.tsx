@@ -14,7 +14,6 @@ interface ColorPaneProps {
 }
 
 const ColorPane = ({ color, length, colors, setColors }: ColorPaneProps) => {
-  console.log('colors', colors)
   const [light, setLight] = useState(false);
   const [showHue, setShowHue] = useState(false);
   const [newColor, setNewColor] = useState(color);
