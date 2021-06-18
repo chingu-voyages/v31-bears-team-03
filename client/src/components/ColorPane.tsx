@@ -14,7 +14,7 @@ const ColorPane = ({ color, length }: ColorPaneProps) => {
   const [showHue, setShowHue] = useState(false)
   const [newColor, setNewColor] = useState(color)
 
-  color = newColor;
+  color = newColor
 
   useEffect(() => {
     checkColor({ color })
@@ -69,7 +69,15 @@ const ColorPane = ({ color, length }: ColorPaneProps) => {
       {showHue ? (
         <div>
           {scaleArr.map((a, i) => {
-            return <Hue color={scaleArr[i]} length={length} setNewColorButton={setNewColorButton} setShowHueButton={setShowHueButton} key={i}/>
+            return (
+              <Hue
+                color={scaleArr[i]}
+                length={length}
+                setNewColorButton={setNewColorButton}
+                setShowHueButton={setShowHueButton}
+                key={i}
+              />
+            )
           })}
         </div>
       ) : (
@@ -81,12 +89,25 @@ const ColorPane = ({ color, length }: ColorPaneProps) => {
           }}
         >
           {light ? (
-            <p style={{ fontSize: '2em', color: 'white' }}>{color}</p>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(color)
+              }}
+              style={{ outline: 'none', fontSize: '2em', color: 'white' }}
+            >
+              {color}
+            </button>
           ) : (
-            <p style={{ fontSize: '2em', color: 'black' }}>{color}</p>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(color)
+              }}
+              style={{ outline: 'none', fontSize: '2em', color: 'black' }}
+            >
+              {color}
+            </button>
           )}
         </div>
-        
       )}
     </div>
   )
