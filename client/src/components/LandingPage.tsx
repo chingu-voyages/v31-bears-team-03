@@ -9,8 +9,8 @@ function Landing({ setColors, colorMode }) {
   const handleClickGenerate = async () => {
     const colorsArr = await colorService.generatePalette(colorMode);
     const colorSlug = colorService.getColorSlug(colorsArr);
-    history.push(`palette/${colorSlug}`);
     setColors(colorsArr);
+    history.push(`palette/${colorSlug}`);
   };
 
   return (

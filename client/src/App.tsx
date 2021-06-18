@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Switch, Route, useHistory, useLocation } from "react-router-dom";
 import "./App.css";
 import chroma from "chroma-js";
+import { v4 as uuidv4 } from "uuid";
 import DemoPage from "./components/DemoPage";
 import LandingPage from "./components/LandingPage";
 import Navbar from "./components/Navbar";
@@ -11,6 +12,7 @@ import colorService from "./services/colorService";
 
 interface IState {
   colors: {
+    id: string;
     color: string;
   }[];
 }
@@ -52,7 +54,7 @@ function App() {
     let returnedArray = (await response).data.colors;
     let newArray = [];
     for (let i = 0; i < returnedArray.length; i++) {
-      newArray.push({ color: returnedArray[i].hex.value });
+      newArray.push({ id: uuidv4(), color: returnedArray[i].hex.value });
     }
     if (colors.length === 0) return;
     setColors(newArray);
@@ -65,6 +67,7 @@ function App() {
         .toString(16)
         .toUpperCase();
     let newColor = {
+      id: uuidv4(),
       color: rand,
     };
     setColors((colors) => [...colors, newColor]);

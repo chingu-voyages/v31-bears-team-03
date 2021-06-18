@@ -7,9 +7,14 @@ import Hue from "./Hue";
 interface ColorPaneProps {
   color: string;
   length: number;
+  colors: {
+    color: string;
+  }[];
+  setColors: ([]) => void;
 }
 
 const ColorPane = ({ color, length, colors, setColors }: ColorPaneProps) => {
+  console.log('colors', colors)
   const [light, setLight] = useState(false);
   const [showHue, setShowHue] = useState(false);
   const [newColor, setNewColor] = useState(color);
@@ -18,11 +23,11 @@ const ColorPane = ({ color, length, colors, setColors }: ColorPaneProps) => {
   color = newColor;
 
   const getNewColors = (colors, newColor) => {
-    const oldColors = colors.map((el) => el.color);
-    const newColors = oldColors.map((el) =>
-      el === oldColor ? { color: newColor } : { color: el }
+    return colors.map((el) =>
+      el.color === oldColor
+        ? { id: el.id, color: newColor }
+        : { id: el.id, color: el.color }
     );
-    return newColors;
   };
 
   useEffect(() => {
