@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 
 const Hue = ({ color, length, setNewColorButton, setShowHueButton }: any) => {
     const [light, setLight] = useState(false)
-
+    const [hover, setHovered] = useState(false)
 
   useEffect(() => {
     checkColor({ color })
@@ -23,8 +23,19 @@ const Hue = ({ color, length, setNewColorButton, setShowHueButton }: any) => {
         }
       }
 
+      const isHovered =() => {
+          setHovered(true)
+      }
+
+      const notHovered = () => {
+          setHovered(false)
+      }
+
   return (
     <button
+        className="colorCode"
+        onMouseEnter={isHovered} 
+        onMouseLeave={notHovered}
         onClick={() => {
             setNewColorButton(color);
             setShowHueButton(false);
@@ -36,9 +47,9 @@ const Hue = ({ color, length, setNewColorButton, setShowHueButton }: any) => {
       }}
     >
                {light ? (
-            <p style={{ fontSize: '1.5em', color: 'white' }}>{color}</p>
+            <p style={{ fontSize: '1.5em', color: 'white'}}>{hover ? `${color}` : ""}</p>
           ) : (
-            <p style={{ fontSize: '1.5em', color: 'black' }}>{color}</p>
+            <p style={{ fontSize: '1.5em', color: 'black'}}>{hover ? `${color}` : ""}</p>
           )}
     </button>
   )

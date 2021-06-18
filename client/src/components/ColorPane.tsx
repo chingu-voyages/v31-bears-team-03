@@ -86,6 +86,7 @@ const ColorPane = ({ color, length }: ColorPaneProps) => {
             <p style={{ fontSize: '2em', color: 'black' }}>{color}</p>
           )}
         </div>
+        
       )}
     </div>
   )
