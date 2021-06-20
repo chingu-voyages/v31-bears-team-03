@@ -100,7 +100,7 @@ function App() {
             generatePalette={generatePalette}
           />
         </Route>
-        <Route exact path="/templates">
+        <Route exact path="/explore">
           <ExplorePage />
         </Route>
       </Switch>

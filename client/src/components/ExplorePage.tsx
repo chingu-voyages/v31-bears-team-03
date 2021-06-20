@@ -1,10 +1,12 @@
 //@ts-nocheck
-import React from "react";
+import React from 'react';
+import CardList from './CardList';
 
 function ExplorePage() {
   return (
-    <div className="mt-20">
-      <h1>Templates Page</h1>
+    <div className="mt-4">
+      <h1>Explore Page</h1>
+      <CardList />
     </div>
   );
 }
