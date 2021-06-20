@@ -1,0 +1,9 @@
+POST http://localhost:4000/palettes/generate
+Content-Type: application/json
+
+{
+    "colors": "[{ color: #5EFC8D }, { color: #8ef9f3 }, { color: #93BEDF }, { color: #8377D1 }, { color: #6D5A72 }]",
+    "likes": 0,
+    "colorPaletteID": "264653-2a9d8f-e9c46a-f4a261-e76f51",
+    "tags": "[Warm, Summer]"
+}
