@@ -1,9 +1,8 @@
 // @ts-nocheck
 import Card from './Card';
 
-const CardList = () => {
+const CardList = ({setColors}) => {
   // fetch all palettes from server
-
   const mockList = [
     {
       id: 1,
@@ -53,7 +52,6 @@ const CardList = () => {
   ];
 
   const data = mockList.sort((a, b) => (a.likes < b.likes ? 1 : -1));
-  console.log('data', data);
 
   if (data) {
     return (
@@ -61,7 +59,7 @@ const CardList = () => {
         <ul className="my-12 md:flex md:flex-wrap md:justify-center">
           {data.map((palette, i) => (
             <li key={palette.id} className="mb-10 md:mx-5">
-              <Card palette={palette} />
+              <Card palette={palette} setColors={setColors} />
             </li>
           ))}
         </ul>
