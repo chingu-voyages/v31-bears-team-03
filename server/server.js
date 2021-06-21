@@ -5,16 +5,21 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const userRoutes = express.Router();
 const router = express.Router();
-app.use(cors());
-app.use(express.json());
+
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
 let User = require('./user.model');
+const colorPaletteRouter = require('./controllers/colorPalette')
+
 
 // move to env when deployed
 const PORT = 4000;
 const SECRET = 'chingubears3';
 const url = 'mongodb+srv://admin:FuNq0pwQLfIvGP2Z@cluster0.dak2e.mongodb.net/color-palette?retryWrites=true&w=majority';
+
+app.use(cors());
+app.use(express.json());
+app.use("/palettes", colorPaletteRouter);
 
 
 mongoose.connect(url, {
