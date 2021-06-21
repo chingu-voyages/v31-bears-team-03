@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Switch, Route, useHistory, useLocation } from "react-router-dom";
-import "./App.css";
-import chroma from "chroma-js";
-import { v4 as uuidv4 } from "uuid";
-import DemoPage from "./components/DemoPage";
-import LandingPage from "./components/LandingPage";
-import Navbar from "./components/Navbar";
-import PalettePage from "./components/PalettePage";
-import ExplorePage from "./components/ExplorePage";
-import colorService from "./services/colorService";
+import React, { useState, useEffect } from 'react';
+import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
+import './App.css';
+import chroma from 'chroma-js';
+import { v4 as uuidv4 } from 'uuid';
+import DemoPage from './components/DemoPage';
+import LandingPage from './components/LandingPage';
+import Navbar from './components/Navbar';
+import PalettePage from './components/PalettePage';
+import ExplorePage from './components/ExplorePage';
+import colorService from './services/colorService';
 
 interface IState {
   colors: {
@@ -18,18 +18,18 @@ interface IState {
 }
 
 function App() {
-  const [colors, setColors] = useState<IState["colors"]>([]);
-  const [colorMode, setColorMode] = useState<string>("monochrome");
+  const [colors, setColors] = useState<IState['colors']>([]);
+  const [colorMode, setColorMode] = useState<string>('monochrome');
 
   const history = useHistory();
   const location = useLocation();
 
   useEffect(() => {
     const getInitialColors = async () => {
-      const colorSlug = location.pathname.split("/")?.[2];
+      const colorSlug = location.pathname.split('/')?.[2];
       const initialColors = colorSlug
         ? colorService.getColorsArrFromSlug(colorSlug)
-        : await colorService.generatePalette("monochrome");
+        : await colorService.generatePalette('monochrome');
       setColors(initialColors);
     };
     getInitialColors();
@@ -62,7 +62,7 @@ function App() {
 
   const addColor = () => {
     let rand =
-      "#" +
+      '#' +
       Math.floor(Math.random() * 16777215)
         .toString(16)
         .toUpperCase();
@@ -100,8 +100,8 @@ function App() {
             generatePalette={generatePalette}
           />
         </Route>
-        <Route exact path="/templates">
-          <ExplorePage />
+        <Route exact path="/explore">
+          <ExplorePage setColors={setColors} />
         </Route>
       </Switch>
     </div>
