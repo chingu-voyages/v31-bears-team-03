@@ -3,8 +3,9 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import colorService from '../services/colorService';
 import { v4 as uuidv4 } from 'uuid';
+import { TrashIcon } from './Icons';
 
-const Card = ({ palette, setColors }) => {
+const Card = ({ palette, setColors, mockUser }) => {
   const history = useHistory();
 
   const handleClickView = () => {
@@ -12,6 +13,12 @@ const Card = ({ palette, setColors }) => {
     palette.colors.forEach((el) => (el.id = uuidv4()));
     setColors(palette.colors);
     history.push(`palette/${colorSlug}`);
+  };
+
+  const handleClickDelete = () => {
+    if (window.confirm('Are you sure you want to delete this palette?')) {
+      // then delete from users liked palettes in db
+    }
   };
 
   return (
@@ -29,12 +36,16 @@ const Card = ({ palette, setColors }) => {
           })}
         </div>
 
-        <div className="flex justify-between px-2 border-gray-100">
+        <div className="flex justify-between px-2 py-1 border-gray-100">
           <div className="flex justify-between w-2/4">
             <div>{palette.likes} likes</div>
             <button onClick={handleClickView}>View</button>
           </div>
-          <div className="">trash</div>
+          {mockUser?.likedPalettes.includes(palette.id) ? (
+            <button onClick={handleClickDelete}>
+              <TrashIcon />
+            </button>
+          ) : null}
         </div>
       </div>
     </div>
