@@ -3,7 +3,7 @@ import React from 'react'
 
 const OptionsBar = ({setColorMode, generatePalette, addColor, length}) => {
     const displayAdd = () => {
-      if(length < 10){
+      if(length < 100){
         return <button style={{marginRight: "2%"}} onClick ={addColor}>Add Colors </button>
       } else {
         return <p>Max colors</p>
