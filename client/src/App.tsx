@@ -56,6 +56,7 @@ function App() {
     for (let i = 0; i < returnedArray.length; i++) {
       newArray.push({ id: uuidv4(), color: returnedArray[i].hex.value });
     }
+    newArray.sort(() => Math.random() - 0.5)
     if (colors.length === 0) return;
     setColors(newArray);
   };
