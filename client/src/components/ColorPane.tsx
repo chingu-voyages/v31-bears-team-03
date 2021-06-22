@@ -51,7 +51,7 @@ const ColorPane = ({ color, length, colors, setColors }: ColorPaneProps) => {
   };
   let scaleArr = [];
 
-  for (let i = 2; i > 0.1; i -= 0.2) {
+  for (let i = 2; i > 0.2; i -= 0.2) {
     scaleArr.push(
       chroma(`${color.substring(1)}`)
         .darken(i)
