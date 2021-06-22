@@ -6,7 +6,8 @@ const OptionsBar = ({setColorMode, generatePalette, addColor, length}) => {
       if(length < 10){
         return <button style={{marginRight: "2%"}} onClick ={addColor}>Add Colors </button>
       } else {
-        return <p>Max colors</p>
+        //
+        return <p>Max</p>
       }
     }
     return(<div>

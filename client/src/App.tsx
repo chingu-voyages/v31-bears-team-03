@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
 import './App.css';
@@ -20,6 +21,7 @@ interface IState {
 function App() {
   const [colors, setColors] = useState<IState['colors']>([]);
   const [colorMode, setColorMode] = useState<string>('monochrome');
+  const [rest, setRest] = useState([]);
 
   const history = useHistory();
   const location = useLocation();
@@ -50,23 +52,38 @@ function App() {
 
   const generatePalette = async () => {
     let first = chroma.random().hex().substring(1);
-    let response = colorService.getPalette(first, colorMode, colors.length);
+    let response = colorService.getPalette(first, colorMode, 11);
     let returnedArray = (await response).data.colors;
+    let restArr = []
     let newArray = [];
-    for (let i = 0; i < returnedArray.length; i++) {
+
+    for (let i = 0; i < colors.length; i++) {
       newArray.push({ id: uuidv4(), color: returnedArray[i].hex.value });
     }
+    console.log(colors.length)
+
+    for (let i = colors.length; i < 10; i++){
+      restArr.push(returnedArray[i].hex.value);
+    }
     if (colors.length === 0) return;
-    setColors(newArray);
+    setColors(newArray)
+    setRest(restArr)
+    console.log(restArr + " rest")
   };
 
   const addColor = () => {
-    let rand =
-    "#" + (Math.random().toString(16) + "000000").slice(2, 8).toUpperCase()
+    // let rand =
+    // "#" + (Math.random().toString(16) + "000000").slice(2, 8).toUpperCase()
+    let num = colors.length; // 5
+
+    let newc = rest[num-5]
+    num--;
+    console.log(colors.length)
     let newColor = {
       id: uuidv4(),
-      color: rand,
-    };
+      color: newc
+    }
+
     setColors((colors) => [...colors, newColor]);
   };
 
