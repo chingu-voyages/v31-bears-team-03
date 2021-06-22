@@ -56,18 +56,21 @@ function App() {
     for (let i = 0; i < returnedArray.length; i++) {
       newArray.push({ id: uuidv4(), color: returnedArray[i].hex.value });
     }
+    newArray.sort(() => Math.random() - 0.5)
     if (colors.length === 0) return;
     setColors(newArray);
   };
 
-  const addColor = () => {
-    let rand =
-    "#" + (Math.random().toString(16) + "000000").slice(2, 8).toUpperCase()
+  const addColor = async () => {
+    let first = colors[Math.floor((Math.random() * colors.length))].color.substring(1)
+    let response = colorService.getPalette(first, colorMode, 15);
+    let returnedArray = (await response).data.colors;
+    console.log(colors.length)
     let newColor = {
       id: uuidv4(),
-      color: rand,
+      color: returnedArray[Math.floor(Math.random() * 9)].hex.value,
     };
-    setColors((colors) => [...colors, newColor]);
+      setColors((colors) => [...colors, newColor]);
   };
 
   if (colors.length === 0) {
