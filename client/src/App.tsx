@@ -62,10 +62,7 @@ function App() {
 
   const addColor = () => {
     let rand =
-      '#' +
-      Math.floor(Math.random() * 16777215)
-        .toString(16)
-        .toUpperCase();
+    "#" + (Math.random().toString(16) + "000000").slice(2, 8).toUpperCase()
     let newColor = {
       id: uuidv4(),
       color: rand,
