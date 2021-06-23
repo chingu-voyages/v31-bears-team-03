@@ -1,19 +1,29 @@
 //@ts-nocheck
-import React, { useState, useEffect } from "react";
-import "./ColorPane.css";
-import chroma from "chroma-js";
-import Hue from "./Hue";
+import React, { useState, useEffect } from 'react';
+import './ColorPane.css';
+import chroma from 'chroma-js';
+import Hue from './Hue';
 
 interface ColorPaneProps {
+  id: string;
   color: string;
   length: number;
   colors: {
+    id: string;
     color: string;
   }[];
   setColors: ([]) => void;
+  deleteColor: () => void;
 }
 
-const ColorPane = ({ color, length, colors, setColors }: ColorPaneProps) => {
+const ColorPane = ({
+  id,
+  color,
+  length,
+  colors,
+  setColors,
+  deleteColor,
+}: ColorPaneProps) => {
   const [light, setLight] = useState(false);
   const [showHue, setShowHue] = useState(false);
   const [newColor, setNewColor] = useState(color);
@@ -75,8 +85,10 @@ const ColorPane = ({ color, length, colors, setColors }: ColorPaneProps) => {
   const setShowHueButton = () => {
     setShowHue(false);
   };
+
   return (
     <div>
+      <button onClick={() => deleteColor(id)}>{console.log(id)}Delete</button>
       {showHue ? (
         <button onClick={() => setShowHue(false)}>hide hues</button>
       ) : (
@@ -109,7 +121,7 @@ const ColorPane = ({ color, length, colors, setColors }: ColorPaneProps) => {
               onClick={() => {
                 navigator.clipboard.writeText(color);
               }}
-              style={{ outline: "none", fontSize: "2em", color: "white" }}
+              style={{ outline: 'none', fontSize: '2em', color: 'white' }}
             >
               {color}
             </button>
@@ -118,7 +130,7 @@ const ColorPane = ({ color, length, colors, setColors }: ColorPaneProps) => {
               onClick={() => {
                 navigator.clipboard.writeText(color);
               }}
-              style={{ outline: "none", fontSize: "2em", color: "black" }}
+              style={{ outline: 'none', fontSize: '2em', color: 'black' }}
             >
               {color}
             </button>
