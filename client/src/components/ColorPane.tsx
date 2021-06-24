@@ -11,18 +11,22 @@ interface ColorPaneProps {
   colors: {
     id: string;
     color: string;
+    lock: boolean;
   }[];
   setColors: ([]) => void;
   deleteColor: () => void;
+  toggleLock: () => void;
 }
 
 const ColorPane = ({
   id,
   color,
   length,
+  lock,
   colors,
   setColors,
   deleteColor,
+  toggleLock,
 }: ColorPaneProps) => {
   const [light, setLight] = useState(false);
   const [showHue, setShowHue] = useState(false);
@@ -88,7 +92,12 @@ const ColorPane = ({
 
   return (
     <div>
-      <button onClick={() => deleteColor(id)}>{console.log(id)}Delete</button>
+      <div>
+        <button onClick={() => toggleLock(id)}>Lock </button>
+      </div>
+      <div>
+        <button onClick={() => deleteColor(id)}> Delete</button>
+      </div>
       {showHue ? (
         <button onClick={() => setShowHue(false)}>hide hues</button>
       ) : (

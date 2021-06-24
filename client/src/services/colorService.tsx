@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const baseUrl = "https://www.thecolorapi.com/";
 
-type Colors = { id: string; color: string }[];
+type Colors = { id: string; color: string; lock: boolean }[];
 
 const getPalette = (color: string, mode: string, count: number) => {
   let response = axios.get(
@@ -20,7 +20,7 @@ const generatePalette = async (colorMode: string) => {
   const returnedArray = response.data.colors;
   const newArray = [];
   for (let i = 0; i < returnedArray.length; i++) {
-    newArray.push({ id: uuidv4(), color: returnedArray[i].hex.value });
+    newArray.push({ id: uuidv4(), color: returnedArray[i].hex.value, lock: false });
   }
   return newArray;
 };

@@ -14,6 +14,7 @@ interface IState {
   colors: {
     id: string;
     color: string;
+    lock: boolean;
   }[];
 }
 
@@ -36,7 +37,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    generatePalette();
+    generatePalette(chroma.random().hex().substring(1));
   }, [colorMode]);
 
   useEffect(() => {
@@ -48,16 +49,62 @@ function App() {
     }
   }, [colors]);
 
-  const generatePalette = async () => {
-    let first = chroma.random().hex().substring(1);
-    let response = colorService.getPalette(first, colorMode, colors.length);
+  const checkLockGenerate = async () => {
+    let checkLock = colors.find((color) => color.lock === true);
+    {
+      console.log(typeof checkLock, ' type of checkLock');
+    }
+    if (typeof checkLock === 'undefined') {
+      {
+        console.log('Checklock is undefined');
+      }
+      let random = chroma.random().hex().substring(1);
+      generatePalette(random);
+    } else {
+      {
+        console.log(checkLock);
+      }
+      generateLockedPalette(checkLock?.color.substring(1));
+    }
+  };
+
+  const generateLockedPalette = async (input: any) => {
+    let response = colorService.getPalette(input, colorMode, colors.length);
     let returnedArray = (await response).data.colors;
     let newArray = [];
     for (let i = 0; i < returnedArray.length; i++) {
-      newArray.push({ id: uuidv4(), color: returnedArray[i].hex.value });
+      if (colors[i].lock === true) {
+        newArray.push({
+          id: colors[i].id,
+          color: colors[i].color,
+          lock: colors[i].lock,
+        });
+      } else {
+        newArray.push({
+          id: uuidv4(),
+          color: returnedArray[i].hex.value,
+          lock: false,
+        });
+      }
     }
-    newArray.sort(() => Math.random() - 0.5);
     if (colors.length === 0) return;
+    console.log(newArray, ' Generated from Locked Palette');
+    setColors(newArray);
+  };
+  const generatePalette = async (input: any) => {
+    let response = colorService.getPalette(input, colorMode, colors.length);
+    let returnedArray = (await response).data.colors;
+    let newArray = [];
+    for (let i = 0; i < returnedArray.length; i++) {
+      newArray.push({
+        id: uuidv4(),
+        color: returnedArray[i].hex.value,
+        lock: false,
+      });
+    }
+    //newArray.sort(() => Math.random() - 0.5);
+    if (colors.length === 0) return;
+    console.log(newArray, 'Generated from Unlocked Palette');
     setColors(newArray);
   };
 
@@ -67,16 +114,36 @@ function App() {
     let response = colorService.getPalette(first, colorMode, 15);
     let returnedArray = (await response).data.colors;
     console.log(colors.length);
+
     let newColor = {
       id: uuidv4(),
       color: returnedArray[Math.floor(Math.random() * 9)].hex.value,
+      lock: false,
     };
+
     setColors((colors) => [...colors, newColor]);
   };
 
   const deleteColor = (id: string) => {
     const newPalette = colors.filter((item) => item.id !== id);
     setColors(newPalette);
+  };
+
+  const toggleLock = (id: string) => {
+    const colorLock = colors.find((item) => item.id === id);
+    //@ts-ignore
+    const changedColor = {
+      id: colorLock?.id,
+      color: colorLock?.color,
+      lock: !colorLock?.lock,
+    };
+    //@ts-ignore
+    let index = colors.findIndex((color) => color.id === colorLock.id);
+    console.log(index, ' + index');
+    //@ts-ignore
+    colors.splice(index, 1, changedColor);
+    console.log(colors, ' + colors');
+    setColors(colors);
   };
 
   if (colors.length === 0) {
@@ -96,8 +163,9 @@ function App() {
             setColors={setColors}
             setColorMode={setColorMode}
             addColor={addColor}
-            generatePalette={generatePalette}
+            checkLockGenerate={checkLockGenerate}
             deleteColor={deleteColor}
+            toggleLock={toggleLock}
           />
         </Route>
         <Route exact path={`/demo/:colorSlug}`}>
