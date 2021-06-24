@@ -56,21 +56,27 @@ function App() {
     for (let i = 0; i < returnedArray.length; i++) {
       newArray.push({ id: uuidv4(), color: returnedArray[i].hex.value });
     }
-    newArray.sort(() => Math.random() - 0.5)
+    newArray.sort(() => Math.random() - 0.5);
     if (colors.length === 0) return;
     setColors(newArray);
   };
 
   const addColor = async () => {
-    let first = colors[Math.floor((Math.random() * colors.length))].color.substring(1)
+    let first =
+      colors[Math.floor(Math.random() * colors.length)].color.substring(1);
     let response = colorService.getPalette(first, colorMode, 15);
     let returnedArray = (await response).data.colors;
-    console.log(colors.length)
+    console.log(colors.length);
     let newColor = {
       id: uuidv4(),
       color: returnedArray[Math.floor(Math.random() * 9)].hex.value,
     };
-      setColors((colors) => [...colors, newColor]);
+    setColors((colors) => [...colors, newColor]);
+  };
+
+  const deleteColor = (id: string) => {
+    const newPalette = colors.filter((item) => item.id !== id);
+    setColors(newPalette);
   };
 
   if (colors.length === 0) {
@@ -91,6 +97,7 @@ function App() {
             setColorMode={setColorMode}
             addColor={addColor}
             generatePalette={generatePalette}
+            deleteColor={deleteColor}
           />
         </Route>
         <Route exact path={`/demo/:colorSlug}`}>

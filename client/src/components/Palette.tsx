@@ -1,16 +1,18 @@
-import React from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import "./Palette.css";
-import ColorPane from "./ColorPane";
+import React from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import './Palette.css';
+import ColorPane from './ColorPane';
 
 interface PaletteProps {
   colors: {
+    id: string;
     color: string;
   }[];
   setColors: ([]) => void;
+  deleteColor: () => void;
 }
 
-const Palette = ({ colors, setColors }: PaletteProps) => {
+const Palette = ({ colors, setColors, deleteColor }: PaletteProps) => {
   const onDragEnd = (result: any) => {
     if (!result.destination) return;
 
@@ -29,10 +31,12 @@ const Palette = ({ colors, setColors }: PaletteProps) => {
             <div ref={provided.innerRef} {...provided.draggableProps}>
               <div {...provided.dragHandleProps}>&lt;- -&gt;</div>
               <ColorPane
+                id={id}
                 color={color}
                 colors={colors}
                 setColors={setColors}
                 length={colors.length}
+                deleteColor={deleteColor}
               />
             </div>
           )}
@@ -49,7 +53,7 @@ const Palette = ({ colors, setColors }: PaletteProps) => {
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              style={{ width: "100%", display: "flex" }}
+              style={{ width: '100%', display: 'flex' }}
             >
               {displayDraggablePanels()}
               {provided.placeholder}
