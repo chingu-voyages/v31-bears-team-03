@@ -1,7 +1,7 @@
 //@ts-nocheck
 import React from 'react'
 
-const OptionsBar = ({setColorMode, generatePalette, addColor, length}) => {
+const OptionsBar = ({setColorMode, checkLockGenerate, addColor, length}) => {
     const displayAdd = () => {
       if(length < 10){
         return <button style={{marginRight: "2%"}} onClick ={addColor}>Add Colors </button>
@@ -18,9 +18,8 @@ const OptionsBar = ({setColorMode, generatePalette, addColor, length}) => {
       <button style={{marginRight: "2%"}} onClick={() => setColorMode('monochrome')}>Monochrome </button>
       <button style={{marginRight: "2%"}} onClick={() => setColorMode('monochrome-dark')}>Monochrome Dark </button>
       <button style={{marginRight: "2%"}} onClick={() => setColorMode('monochrome-light')}>Monochrome Light </button>
-      <button style={{marginRight: "2%"}} onClick ={generatePalette}>Generate Palette </button>
+      <button style={{marginRight: "2%"}} onClick ={checkLockGenerate}>Generate Palette </button>
       {displayAdd()}
-      {console.log(length)}
     </div>)
 }
 

@@ -7,15 +7,16 @@ function PalettePage({
   colors,
   setColors,
   setColorMode,
-  generatePalette,
+  checkLockGenerate,
   addColor,
   deleteColor,
+  toggleLock,
 }) {
   return (
     <div>
       <OptionsBar
         setColorMode={setColorMode}
-        generatePalette={generatePalette}
+        checkLockGenerate={checkLockGenerate}
         addColor={addColor}
         length={colors.length}
       />
@@ -23,6 +24,7 @@ function PalettePage({
         colors={colors}
         setColors={setColors}
         deleteColor={deleteColor}
+        toggleLock={toggleLock}
       />
     </div>
   );

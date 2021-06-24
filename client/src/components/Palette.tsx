@@ -7,12 +7,14 @@ interface PaletteProps {
   colors: {
     id: string;
     color: string;
+    lock: boolean;
   }[];
   setColors: ([]) => void;
   deleteColor: () => void;
+  toggleLock: () => void;
 }
 
-const Palette = ({ colors, setColors, deleteColor }: PaletteProps) => {
+const Palette = ({ colors, setColors, deleteColor, toggleLock }: PaletteProps) => {
   const onDragEnd = (result: any) => {
     if (!result.destination) return;
 
@@ -37,6 +39,7 @@ const Palette = ({ colors, setColors, deleteColor }: PaletteProps) => {
                 setColors={setColors}
                 length={colors.length}
                 deleteColor={deleteColor}
+                toggleLock={toggleLock}
               />
             </div>
           )}
