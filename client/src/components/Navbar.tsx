@@ -1,12 +1,17 @@
 //@ts-nocheck
-import React, { useState, useRef, useLayoutEffect } from 'react';
-import { useEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import colorService from '../services/colorService';
+import SignUp from './SignUp';
+import SignIn from './SignIn';
 
 export default function Navbar({ colors }) {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showSignInModal, setShowSignInModal] = useState(false);
+
+  const isLoggedIn = false;
 
   let location = useLocation();
   const targetRef = useRef();
@@ -62,42 +67,74 @@ export default function Navbar({ colors }) {
             className={
               ' lg:flex flex-grow items-center right-0 ' +
               (navbarOpen
-                ? ` absolute lg:flex bg-white border-t border-gray-200 shadow-md`
+                ? ` absolute lg:flex bg-white border-t border-gray-200 shadow-md `
                 : ' hidden ')
             }
             style={{
               top: navbarOpen ? dimensions.height : 0,
             }}
           >
-            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
-              <li className="nav-item">
+            <ul
+              className={`flex flex-col lg:flex-row list-none lg:ml-auto ${
+                navbarOpen ? ' ' : 'items-center'
+              }`}
+            >
+              <li className="text-left">
                 <NavLink to={`/palette/${colorService.getColorSlug(colors)}`}>
-                  <div className={`px-3 py-2 flex items-center text-base uppercase font-medium leading-snug text-gray-800 hover:opacity-75`}>
+                  <div
+                    className={`px-3 py-2 flex items-center text-base uppercase font-medium leading-snug text-gray-800 hover:opacity-75`}
+                  >
                     <div className="mx-4">Palette</div>
                   </div>
                 </NavLink>
               </li>
-              <li className="nav-item">
+              <li className="text-left">
                 <NavLink to="/demo">
-                  <div className={`px-3 py-2 flex items-center text-base uppercase font-medium leading-snug text-gray-800 hover:opacity-75`}>
+                  <div
+                    className={`px-3 py-2 flex items-center text-base uppercase font-medium leading-snug text-gray-800 hover:opacity-75`}
+                  >
                     <div className="mx-4">Demo</div>
                   </div>
                 </NavLink>
               </li>
-              <li className="nav-item">
+              <li className="text-left">
                 <NavLink to="/explore">
-                  <div className={`px-3 py-2 flex items-center text-base uppercase font-medium leading-snug text-gray-800 hover:opacity-75`}>
+                  <div
+                    className={`px-3 py-2 flex items-center text-base uppercase font-medium leading-snug text-gray-800 hover:opacity-75`}
+                  >
                     <div className="mx-4">Explore</div>
                   </div>
                 </NavLink>
               </li>
-              <li className="nav-item">
-                <div className={`px-3 py-2 flex items-center text-base uppercase font-medium leading-snug text-gray-800 hover:opacity-75`}>
-                  <div className="mx-4">
-                    <p>Register (modal)</p>
+
+              {isLoggedIn ? (
+                <li className="text-left">
+                  <div
+                    className={`px-3 py-2 flex items-center text-base uppercase font-medium leading-snug text-gray-800 hover:opacity-75`}
+                  >
+                    <div className="mx-4">
+                      <p>Logout</p>
+                    </div>
                   </div>
-                </div>
-              </li>
+                </li>
+              ) : (
+                <>
+                  <li className="text-left">
+                    <SignUp
+                      showSignUpModal={showSignUpModal}
+                      setShowSignUpModal={setShowSignUpModal}
+                      setNavbarOpen={setNavbarOpen}
+                    />
+                  </li>
+                  <li className="text-left">
+                    <SignIn
+                      showSignInModal={showSignInModal}
+                      setShowSignInModal={setShowSignInModal}
+                      setNavbarOpen={setNavbarOpen}
+                    />
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>
