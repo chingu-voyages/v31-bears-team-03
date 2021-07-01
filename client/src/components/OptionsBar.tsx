@@ -8,6 +8,15 @@ const OptionsBar = ({colors ,setColorMode, checkLockGenerate, addColor, length})
       exploreService.addPalette(colors);
     }
 
+    const formatString = () => {
+      let string = [];
+      colors.map(color => {
+        string.push(color.color)
+      })
+
+      return string;
+    }
+
     const displayAdd = () => {
       if(length < 10){
         return <button style={{marginRight: "2%"}} onClick ={addColor}>Add Colors </button>
@@ -27,6 +36,7 @@ const OptionsBar = ({colors ,setColorMode, checkLockGenerate, addColor, length})
       <button style={{marginRight: "2%"}} onClick ={checkLockGenerate}>Generate Palette </button>
       {displayAdd()}
       <button style={{marginRight: "2%"}} onClick ={saveColor}>Save Color</button>
+      <button style={{marginRight: "2%"}} onClick={() => {navigator.clipboard.writeText(formatString());}}>Export</button>
     </div>)
 }
 
