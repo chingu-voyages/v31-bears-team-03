@@ -3,6 +3,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import CardList from './CardList';
+import exploreService from '../services/exploreService';
 
 // const mockUser = undefined;
 const mockUser = {
@@ -14,55 +15,55 @@ function ExplorePage({ setColors }) {
   const [listAll, setListAll] = useState(true);
 
   // fetch all palettes from server
-  const mockList = [
-    {
-      id: 1,
-      likes: 20,
-      colors: [
-        { color: '#0A212B' },
-        { color: '#144155' },
-        { color: '#1D617F' },
-        { color: '#676767' },
-        { color: '#818181' },
-      ],
-    },
-    {
-      id: 2,
-      likes: 50,
-      colors: [
-        { color: '#C87687' },
-        { color: '#CB8079' },
-        { color: '#CD9B7C' },
-        { color: '#CFB67E' },
-        { color: '#D1D181' },
-      ],
-    },
-    {
-      id: 3,
-      likes: 10,
-      colors: [
-        { color: '#868598' },
-        { color: '#89889D' },
-        { color: '#A28C8B' },
-        { color: '#A78F8E' },
-        { color: '#91AC92' },
-        { color: '#94B195' },
-        { color: '#97B698' },
-        { color: '#9ABB9C' },
-      ],
-    },
-    {
-      id: 4,
-      likes: 2,
-      colors: [
-        { color: '#181025' },
-        { color: '#3D2862' },
-        { color: '#707070' },
-      ],
-    },
-  ];
+  // const mockList = [
+  //   {
+  //     id: 1,
+  //     likes: 20,
+  //     colors: [
+  //       { color: '#0A212B' },
+  //       { color: '#144155' },
+  //       { color: '#1D617F' },
+  //       { color: '#676767' },
+  //       { color: '#818181' },
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     likes: 50,
+  //     colors: [
+  //       { color: '#C87687' },
+  //       { color: '#CB8079' },
+  //       { color: '#CD9B7C' },
+  //       { color: '#CFB67E' },
+  //       { color: '#D1D181' },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     likes: 10,
+  //     colors: [
+  //       { color: '#868598' },
+  //       { color: '#89889D' },
+  //       { color: '#A28C8B' },
+  //       { color: '#A78F8E' },
+  //       { color: '#91AC92' },
+  //       { color: '#94B195' },
+  //       { color: '#97B698' },
+  //       { color: '#9ABB9C' },
+  //     ],
+  //   },
+  //   {
+  //     id: 4,
+  //     likes: 2,
+  //     colors: [
+  //       { color: '#181025' },
+  //       { color: '#3D2862' },
+  //       { color: '#707070' },
+  //     ],
+  //   },
+  // ];
 
-  const list = mockList.sort((a, b) => (a.likes < b.likes ? 1 : -1));
+  //const list = data.sort((a, b) => (a.likes < b.likes ? 1 : -1));
 
   const handleClickAllPalettes = () => {
     setData(list);
@@ -77,8 +78,14 @@ function ExplorePage({ setColors }) {
     setListAll(false);
   };
 
+  const getData = async () => {
+    let response =  await exploreService.getPalettes()
+    setData(response.data)
+  }
+
+
   useEffect(() => {
-    setData(list);
+    getData();
   }, []);
 
   if (!data) return null;

@@ -1,7 +1,22 @@
 //@ts-nocheck
 import React from 'react'
+import exploreService from '../services/exploreService'
 
-const OptionsBar = ({setColorMode, checkLockGenerate, addColor, length}) => {
+const OptionsBar = ({colors ,setColorMode, checkLockGenerate, addColor, length}) => {
+
+    const saveColor = () => {
+      exploreService.addPalette(colors);
+    }
+
+    const formatString = () => {
+      let string = [];
+      colors.map(color => {
+        string.push(color.color)
+      })
+
+      return string;
+    }
+
     const displayAdd = () => {
       if(length < 10){
         return <button style={{marginRight: "2%"}} onClick ={addColor}>Add Colors </button>
@@ -20,6 +35,8 @@ const OptionsBar = ({setColorMode, checkLockGenerate, addColor, length}) => {
       <button style={{marginRight: "2%"}} onClick={() => setColorMode('monochrome-light')}>Monochrome Light </button>
       <button style={{marginRight: "2%"}} onClick ={checkLockGenerate}>Generate Palette </button>
       {displayAdd()}
+      <button style={{marginRight: "2%"}} onClick ={saveColor}>Save Color</button>
+      <button style={{marginRight: "2%"}} onClick={() => {navigator.clipboard.writeText(formatString());}}>Export</button>
     </div>)
 }
 

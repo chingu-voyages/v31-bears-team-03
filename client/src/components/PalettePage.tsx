@@ -19,6 +19,7 @@ function PalettePage({
         checkLockGenerate={checkLockGenerate}
         addColor={addColor}
         length={colors.length}
+        colors={colors}
       />
       <Palette
         colors={colors}
