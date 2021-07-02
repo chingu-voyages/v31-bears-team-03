@@ -5,6 +5,7 @@ import OptionsBar from './OptionsBar';
 
 function PalettePage({
   colors,
+  colorMode,
   setColors,
   setColorMode,
   checkLockGenerate,
@@ -15,6 +16,7 @@ function PalettePage({
   return (
     <div>
       <OptionsBar
+        colorMode={colorMode}
         setColorMode={setColorMode}
         checkLockGenerate={checkLockGenerate}
         addColor={addColor}

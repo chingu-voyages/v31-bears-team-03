@@ -161,6 +161,7 @@ function App() {
           <PalettePage
             colors={colors}
             setColors={setColors}
+            colorMode={colorMode}
             setColorMode={setColorMode}
             addColor={addColor}
             checkLockGenerate={checkLockGenerate}
