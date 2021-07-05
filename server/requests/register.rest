@@ -3,6 +3,7 @@ Content-Type: application/json
 
 {
     "name": "test_user",
-    "email": "validemail2@gmail.com",
-    "password": "test_password"
+    "email": "validemail23@gmail.com",
+    "password": "test_password",
+    "likedPalettes": "[]"
 }
