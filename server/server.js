@@ -12,9 +12,10 @@ const userRouter = require('./controllers/userRouter');
 
 
 // move to env when deployed
-const PORT = 4000;
+const PORT = process.env.port || 4000;
 const MONGODB_URL = 'mongodb+srv://admin:FuNq0pwQLfIvGP2Z@cluster0.dak2e.mongodb.net/color-palette?retryWrites=true&w=majority';
 
+app.set("port", PORT);
 app.use(cors());
 app.use(express.json());
 app.use(passport.initialize());
