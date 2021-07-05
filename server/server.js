@@ -12,10 +12,8 @@ const userRouter = require('./controllers/userRouter');
 
 
 // move to env when deployed
-const PORT = process.env.PORT || 4000;
 const MONGODB_URL = 'mongodb+srv://admin:FuNq0pwQLfIvGP2Z@cluster0.dak2e.mongodb.net/color-palette?retryWrites=true&w=majority';
 
-app.set("port", PORT);
 app.use(cors());
 app.use(express.json());
 app.use(passport.initialize());
@@ -44,6 +42,6 @@ connection.once('open', function() {
 
 app.use('/', router);
 
-app.listen(PORT, function() {
+app.listen(process.env.PORT || 4000, function() {
     console.log("Server is running on port: " + PORT);
 });
