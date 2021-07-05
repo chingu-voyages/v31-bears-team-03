@@ -10,9 +10,9 @@ const router = express.Router();
 const colorPaletteRouter = require('./controllers/colorPaletteRouter');
 const userRouter = require('./controllers/userRouter');
 
-
 // move to env when deployed
 const MONGODB_URL = 'mongodb+srv://admin:FuNq0pwQLfIvGP2Z@cluster0.dak2e.mongodb.net/color-palette?retryWrites=true&w=majority';
+const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
@@ -42,6 +42,6 @@ connection.once('open', function() {
 
 app.use('/', router);
 
-app.listen(process.env.PORT || 4000, function() {
+app.listen(PORT, function() {
     console.log("Server is running on port: " + PORT);
 });
