@@ -12,13 +12,12 @@ const User = require('./models/User.model');
 const colorPaletteRouter = require('./controllers/colorPaletteRouter');
 const userRouter = require('./controllers/userRouter');
 
-
 // move to env when deployed
 const GOOGLE_CLIENT_ID = "54958304070-mo2h77mu817tm6mkt5d0tstl8opvkibo.apps.googleusercontent.com";
 const GOOGLE_SECRET = "aoO4_w__Bs007BbPfDcv8NvX";
 const COOKIE_KEY = "chingubears3";
-const PORT = 4000;
 const MONGODB_URL = 'mongodb+srv://admin:FuNq0pwQLfIvGP2Z@cluster0.dak2e.mongodb.net/color-palette?retryWrites=true&w=majority';
+const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
