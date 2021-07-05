@@ -11,6 +11,9 @@ let UserSchema = new Schema({
     },
     password: {
         type: String
+    },
+    likedPalettes: {
+        type: Array
     }
 });
 
