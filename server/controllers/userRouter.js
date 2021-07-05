@@ -71,4 +71,34 @@ userRouter.route('/testget').get(function(req, res) {
     });
 });
 
+userRouter.route('/palettes/add').put(async function (req, res) {
+    const body = req.body;
+    const paletteToAdd = body.colorPaletteID
+    const user = await User.findOne({ email: req.body.email });
+    console.log(user)
+    if (!user.likedPalettes.includes(paletteToAdd)) {
+        user.likedPalettes = [...user.likedPalettes, paletteToAdd]
+    } else {
+        return res.status(400).send('Color palette already in saved palettes');
+    }
+    
+    await user.save();
+    res.json(user);
+})
+
+userRouter.route('/palettes/remove').put(async function (req, res) {
+    const body = req.body;
+    const paletteToAdd = body.colorPaletteID
+    const user = await User.findOne({ email: req.body.email });
+    console.log(user)
+    if (user.likedPalettes.includes(paletteToAdd)) {
+        user.likedPalettes = user.likedPalettes.filter(palette => palette != paletteToAdd)
+    } else {
+        return res.status(400).send('Color palette not in saved palettes');
+    }
+    
+    await user.save();
+    res.json(user);
+})
+
 module.exports = userRouter;
