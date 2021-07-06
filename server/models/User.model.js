@@ -7,13 +7,18 @@ let UserSchema = new Schema({
     },
     email: {
         type: String,
-        unique: true
     },
     password: {
         type: String
     },
     likedPalettes: {
         type: Array
+    },
+    googleid: { 
+        type: String
+    },
+    provider: { 
+        type: String
     }
 });
 
