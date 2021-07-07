@@ -16,6 +16,7 @@ interface ColorPaneProps {
   setColors: ([]) => void;
   deleteColor: () => void;
   toggleLock: () => void;
+  dragHandleProps: any;
 }
 
 const ColorPane = ({
@@ -27,6 +28,7 @@ const ColorPane = ({
   setColors,
   deleteColor,
   toggleLock,
+  dragHandleProps,
 }: ColorPaneProps) => {
   const [light, setLight] = useState(false);
   const [showHue, setShowHue] = useState(false);
@@ -65,19 +67,23 @@ const ColorPane = ({
   };
   let scaleArr = [];
 
-  for (let i = 2; i > 0.2; i -= 0.2) {
+  for (let i = 1.8; i > 0.2; i -= 0.2) {
     scaleArr.push(
       chroma(`${color.substring(1)}`)
         .darken(i)
         .hex()
+        .toUpperCase()
     );
   }
+
+  scaleArr.push(color);
 
   for (let i = 0.1; i < 2; i += 0.2) {
     scaleArr.push(
       chroma(`${color.substring(1)}`)
         .brighten(i)
         .hex()
+        .toUpperCase()
     );
   }
 
@@ -90,64 +96,74 @@ const ColorPane = ({
     setShowHue(false);
   };
 
-  return (
-    <div>
-      <div>
-        <button onClick={() => toggleLock(id)}>Lock </button>
-      </div>
-      <div>
-        <button onClick={() => deleteColor(id)}> Delete</button>
-      </div>
-      {showHue ? (
-        <button onClick={() => setShowHue(false)}>hide hues</button>
-      ) : (
-        <button onClick={() => setShowHue(true)}>show hues</button>
-      )}
-      {showHue ? (
-        <div>
-          {scaleArr.map((a, i) => {
-            return (
-              <Hue
-                color={scaleArr[i]}
-                length={length}
-                setNewColorButton={setNewColorButton}
-                setShowHueButton={setShowHueButton}
-                key={i}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        <div
-          className="ColorPane"
+  const renderButtons = (light) => {
+    return (
+      <div className="flex flex-col h-full ">
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(color);
+          }}
           style={{
-            width: `${100 / length}vw`,
-            background: `${color}`,
+            outline: 'none',
+            fontSize: '2em',
+            color: light ? 'white' : 'black',
           }}
         >
-          {light ? (
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(color);
-              }}
-              style={{ outline: 'none', fontSize: '2em', color: 'white' }}
+          {color}
+        </button>
+        <div className="m-auto">
+          <div>
+            <div
+              {...dragHandleProps}
+              className={`${light ? 'text-white' : 'text-black'}`}
             >
-              {color}
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(color);
-              }}
-              style={{ outline: 'none', fontSize: '2em', color: 'black' }}
-            >
-              {color}
-            </button>
-          )}
+              &lt;- -&gt;
+            </div>
+          </div>
+          <div className={`${light ? 'text-white' : 'text-black'}`}>
+            <button onClick={() => toggleLock(id)}>Lock</button>
+          </div>
+          <div className={`${light ? 'text-white' : 'text-black'}`}>
+            <button onClick={() => deleteColor(id)}>Delete</button>
+          </div>
+          <div className={`${light ? 'text-white' : 'text-black'}`}>
+            <button onClick={() => setShowHue(true)}>show hues</button>
+          </div>
         </div>
-      )}
+      </div>
+    );
+  };
+
+  return (
+    <div>
+      <div
+        className="h-full "
+        style={{
+          width: `${100 / length}vw`,
+          background: `${color}`,
+          height: '100vh',
+        }}
+      >
+        {showHue ? (
+          <div>
+            {scaleArr.map((a, i) => {
+              return (
+                <Hue
+                  color={scaleArr[i]}
+                  curColor={newColor}
+                  length={length}
+                  setNewColorButton={setNewColorButton}
+                  setShowHueButton={setShowHueButton}
+                  key={i}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          renderButtons(light)
+        )}
+      </div>
     </div>
   );
 };
-
 export default ColorPane;

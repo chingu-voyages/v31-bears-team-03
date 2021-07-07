@@ -22,9 +22,10 @@ const GOOGLE_CLIENT_ID = "54958304070-mo2h77mu817tm6mkt5d0tstl8opvkibo.apps.goog
 const GOOGLE_SECRET = "aoO4_w__Bs007BbPfDcv8NvX";
 const GITHUB_CLIENT_ID = "41cc5b5681b7237db07c";
 const GITHUB_SECRET = "c82779fb201c5e278f829ced7e83fb3505fd3f1e"
-const PORT = 4000;
 const MONGODB_URL = 'mongodb+srv://admin:FuNq0pwQLfIvGP2Z@cluster0.dak2e.mongodb.net/color-palette?retryWrites=true&w=majority';
 const SECRET = 'chingubears3';
+const PORT = process.env.PORT || 4000;
+
 
 app.use(cors());
 app.use(express.json());

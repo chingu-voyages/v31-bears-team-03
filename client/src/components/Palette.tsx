@@ -14,7 +14,12 @@ interface PaletteProps {
   toggleLock: () => void;
 }
 
-const Palette = ({ colors, setColors, deleteColor, toggleLock }: PaletteProps) => {
+const Palette = ({
+  colors,
+  setColors,
+  deleteColor,
+  toggleLock,
+}: PaletteProps) => {
   const onDragEnd = (result: any) => {
     if (!result.destination) return;
 
@@ -31,7 +36,6 @@ const Palette = ({ colors, setColors, deleteColor, toggleLock }: PaletteProps) =
         <Draggable key={id} draggableId={id} index={index}>
           {(provided) => (
             <div ref={provided.innerRef} {...provided.draggableProps}>
-              <div {...provided.dragHandleProps}>&lt;- -&gt;</div>
               <ColorPane
                 id={id}
                 color={color}
@@ -40,6 +44,7 @@ const Palette = ({ colors, setColors, deleteColor, toggleLock }: PaletteProps) =
                 length={colors.length}
                 deleteColor={deleteColor}
                 toggleLock={toggleLock}
+                dragHandleProps={provided.dragHandleProps}
               />
             </div>
           )}
