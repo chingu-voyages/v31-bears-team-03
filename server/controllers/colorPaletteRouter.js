@@ -7,6 +7,7 @@ var bcrypt = require('bcrypt');
 const SECRET = 'chingubears3';
 
 colorPaletteRouter.get("/", async(request, response) => {
+    console.log('hello')
     var token = request.headers['access_token'];
     if (!token) 
         return response.status(401).send("No token found");
@@ -17,6 +18,8 @@ colorPaletteRouter.get("/", async(request, response) => {
         const colorPalettes = await ColorPalette.find({});
         response.json(colorPalettes.map((colorPalette) => colorPalette.toJSON()));
     });
+
+    console.log(request)
 })
 
 colorPaletteRouter.get("/:id", async(request, response) => {
@@ -27,13 +30,12 @@ colorPaletteRouter.get("/:id", async(request, response) => {
         if (err) 
             return response.status(500).send('Failed to authenticate token');
 
-        console.log('getting by id')
         const colorPalette = await ColorPalette.findOne({colorPaletteID: request.params.id});
 
         if(colorPalette) {
             response.json(colorPalette.toJSON());
         } else {
-            response.status(404).end();
+            response.status(404).send("Color palette has not been generated");
         }
     });
 })

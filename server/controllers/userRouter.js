@@ -1,6 +1,7 @@
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
 const userRouter = require("express").Router()
+const ColorPalette = require('../models/ColorPalette.model')
 const User = require('../models/User.model')
 
 //env
@@ -63,6 +64,13 @@ userRouter.route('/palettes/add').put(async function (req, res) {
         console.log(user)
         if (!user.likedPalettes.includes(paletteToAdd)) {
             user.likedPalettes = [...user.likedPalettes, paletteToAdd]
+            
+            // Increment the likes of the color palette
+            const colorPalette = await ColorPalette.findOne({colorPaletteID: paletteToAdd});
+            console.log(colorPalette)
+            colorPalette.likes = colorPalette.likes + 1;
+            await colorPalette.save();
+            
         } else {
             return res.status(400).send('Color palette already in saved palettes');
         }
@@ -87,6 +95,13 @@ userRouter.route('/palettes/remove').put(async function (req, res) {
         console.log(user)
         if (user.likedPalettes.includes(paletteToAdd)) {
             user.likedPalettes = user.likedPalettes.filter(palette => palette != paletteToAdd)
+
+            // Decrement color palette likes by 1
+            const colorPalette = await ColorPalette.findOne({colorPaletteID: paletteToAdd});
+            console.log(colorPalette)
+            colorPalette.likes = colorPalette.likes - 1;
+            await colorPalette.save();
+            
         } else {
             return res.status(400).send('Color palette not in saved palettes');
         }
