@@ -3,6 +3,7 @@ var bcrypt = require('bcrypt');
 const userRouter = require("express").Router()
 const User = require('../models/User.model')
 
+//env
 const SECRET = 'chingubears3';
 
 userRouter.route('/register').post(function(req, res) {
@@ -28,35 +29,11 @@ userRouter.route('/register').post(function(req, res) {
         });
 });
 
-userRouter.route('/login').post(function(req, res) {
-    if(req.body.constructor === Object && Object.keys(req.body).length === 0)
-        return res.status(400).send('Empty body');
-
-    User.findOne({ email: req.body.email }, function(err, user) {
-        if (!user)
-            return res.status(404).send("No user found");
-        if (err)
-            return res.status(500).send("Server error");
-
-        var validPassword = bcrypt.compareSync(req.body.password, user.password);
-        if (!validPassword) 
-            return res.status(401).send({ success: false, access_token: null });
-        
-        var token = jwt.sign({ id: user._id }, SECRET, {
-            expiresIn: 86400 // 24 hours
-        });
-        
-        res.status(200).send({ success: true, access_token: token });        
-    });
-});
-
 userRouter.route('/testget').get(function(req, res) {
     var token = req.headers['access_token'];
-
     if (!token) 
         return res.status(401).send("No token found");
-  
-    jwt.verify(token, SECRET, function(err, decoded) {
+    jwt.verify(token, SECRET, async function(err, decoded) {
         if (err) 
             return res.status(500).send('Failed to authenticate token');
         
@@ -72,33 +49,51 @@ userRouter.route('/testget').get(function(req, res) {
 });
 
 userRouter.route('/palettes/add').put(async function (req, res) {
-    const body = req.body;
-    const paletteToAdd = body.colorPaletteID
-    const user = await User.findOne({ email: req.body.email });
-    console.log(user)
-    if (!user.likedPalettes.includes(paletteToAdd)) {
-        user.likedPalettes = [...user.likedPalettes, paletteToAdd]
-    } else {
-        return res.status(400).send('Color palette already in saved palettes');
-    }
-    
-    await user.save();
-    res.json(user);
+    var token = req.headers['access_token'];
+    if (!token) 
+        return res.status(401).send("No token found");
+
+    jwt.verify(token, SECRET, async function(err, decoded) {
+        if (err) 
+            return res.status(500).send('Failed to authenticate token');
+
+        const body = req.body;
+        const paletteToAdd = body.colorPaletteID
+        const user = await User.findOne({ email: req.body.email });
+        console.log(user)
+        if (!user.likedPalettes.includes(paletteToAdd)) {
+            user.likedPalettes = [...user.likedPalettes, paletteToAdd]
+        } else {
+            return res.status(400).send('Color palette already in saved palettes');
+        }
+        
+        await user.save();
+        res.json(user);
+    });
 })
 
 userRouter.route('/palettes/remove').put(async function (req, res) {
-    const body = req.body;
-    const paletteToAdd = body.colorPaletteID
-    const user = await User.findOne({ email: req.body.email });
-    console.log(user)
-    if (user.likedPalettes.includes(paletteToAdd)) {
-        user.likedPalettes = user.likedPalettes.filter(palette => palette != paletteToAdd)
-    } else {
-        return res.status(400).send('Color palette not in saved palettes');
-    }
-    
-    await user.save();
-    res.json(user);
+    var token = req.headers['access_token'];
+    if (!token) 
+        return res.status(401).send("No token found");
+
+    jwt.verify(token, SECRET, async function(err, decoded) {
+        if (err) 
+            return res.status(500).send('Failed to authenticate token');
+
+        const body = req.body;
+        const paletteToAdd = body.colorPaletteID
+        const user = await User.findOne({ email: req.body.email });
+        console.log(user)
+        if (user.likedPalettes.includes(paletteToAdd)) {
+            user.likedPalettes = user.likedPalettes.filter(palette => palette != paletteToAdd)
+        } else {
+            return res.status(400).send('Color palette not in saved palettes');
+        }
+        
+        await user.save();
+        res.json(user);
+    });
 })
 
 module.exports = userRouter;

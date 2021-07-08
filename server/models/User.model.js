@@ -14,7 +14,10 @@ let UserSchema = new Schema({
     likedPalettes: {
         type: Array
     },
-    googleid: { 
+    googleid: {
+        type: String
+    },
+    githubid: {
         type: String
     },
     provider: { 
