@@ -1,13 +1,13 @@
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
-const userRouter = require("express").Router()
+const router = require("express").Router()
 const ColorPalette = require('../models/ColorPalette.model')
 const User = require('../models/User.model')
 
 //env
 const SECRET = 'chingubears3';
 
-userRouter.route('/register').post(function(req, res) {
+router.route('/user/register').post(function(req, res) {
     if(req.body.constructor === Object && Object.keys(req.body).length === 0)
         return res.status(400).send('Empty body');
 
@@ -30,7 +30,7 @@ userRouter.route('/register').post(function(req, res) {
         });
 });
 
-userRouter.route('/testget').get(function(req, res) {
+router.route('/user/testget').get(function(req, res) {
     var token = req.headers['access_token'];
     if (!token) 
         return res.status(401).send("No token found");
@@ -49,7 +49,7 @@ userRouter.route('/testget').get(function(req, res) {
     });
 });
 
-userRouter.route('/palettes/add').put(async function (req, res) {
+router.route('/user/palettes/add').put(async function (req, res) {
     var token = req.headers['access_token'];
     if (!token) 
         return res.status(401).send("No token found");
@@ -80,7 +80,7 @@ userRouter.route('/palettes/add').put(async function (req, res) {
     });
 })
 
-userRouter.route('/palettes/remove').put(async function (req, res) {
+router.route('/user/palettes/remove').put(async function (req, res) {
     var token = req.headers['access_token'];
     if (!token) 
         return res.status(401).send("No token found");
@@ -111,4 +111,87 @@ userRouter.route('/palettes/remove').put(async function (req, res) {
     });
 })
 
-module.exports = userRouter;
+
+router.get("/palettes", async(request, response) => {
+    var token = request.headers['access_token'];
+    if (!token) 
+        return response.status(401).send("No token found");
+    jwt.verify(token, SECRET, async function(err, decoded) {
+        if (err) 
+            return res.status(500).send('Failed to authenticate token');
+
+        const colorPalettes = await ColorPalette.find({});
+        response.json(colorPalettes.map((colorPalette) => colorPalette.toJSON()));
+    });
+})
+
+router.get("/palettes/:id", async(request, response) => {
+    var token = request.headers['access_token'];
+    if (!token) 
+        return response.status(401).send("No token found");
+    jwt.verify(token, SECRET, async function(err, decoded) {
+        if (err) 
+            return response.status(500).send('Failed to authenticate token');
+
+        const colorPalette = await ColorPalette.findOne({colorPaletteID: request.params.id});
+
+        if(colorPalette) {
+            response.json(colorPalette.toJSON());
+        } else {
+            response.status(404).send("Color palette has not been generated");
+        }
+    });
+})
+
+router.post("/palettes/generate", async(request, response) => {
+    var token = request.headers['access_token'];
+    if (!token) 
+        return response.status(401).send("No token found");
+    jwt.verify(token, SECRET, async function(err, decoded) {
+        if (err) 
+            return response.status(500).send('Failed to authenticate token');
+
+        const body = request.body;
+
+        const existingPalette = await ColorPalette.findOne({colorPaletteID: request.body.colorPaletteID});
+
+        if (existingPalette) {
+            response.json({error: "color palette already generated"})
+        } else {
+
+            const colorPalette = new ColorPalette({
+                colors: body.colors,
+                likes: body.likes || 0,
+                colorPaletteID: body.colorPaletteID,
+                tags: [] || body.tags
+            });
+        
+            await colorPalette.save();
+        
+            response.json(colorPalette);
+        }
+    });
+});
+
+router.put("/palettes/:id/update", async(request, response) => {
+    var token = request.headers['access_token'];
+    if (!token) 
+        return response.status(401).send("No token found");
+    jwt.verify(token, SECRET, async function(err, decoded) {
+        if (err) 
+            return response.status(500).send('Failed to authenticate token');
+
+        const body = request.body;
+        const colorPalette = await ColorPalette.findOne({colorPaletteID: request.body.colorPaletteID});
+        
+        colorPalette.colors = body.colors;
+        colorPalette.likes = body.likes;
+        colorPalette.colorPaletteID = body.colorPaletteID;
+        colorPalette.tags = body.tags;
+
+        await colorPalette.save();
+        response.json(colorPalette);
+    });
+})
+
+module.exports = router;

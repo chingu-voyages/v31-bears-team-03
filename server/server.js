@@ -13,8 +13,7 @@ const User = require('./models/User.model');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 
-const colorPaletteRouter = require('./controllers/colorPaletteRouter');
-const userRouter = require('./controllers/userRouter');
+const userAndColorPaletteRouter = require('./controllers/userAndColorPaletteRouter');
 
 
 // create new id+secrets for heroku and move to env when deployed
@@ -29,8 +28,7 @@ const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
-app.use("/palettes", colorPaletteRouter);
-app.use("/user", userRouter);
+app.use("/", userAndColorPaletteRouter);
 app.use(session({
     maxAge: 24*60*60*1000, // 1 day in ms
     keys:[SECRET]
