@@ -7,6 +7,7 @@ const User = require('../models/User.model')
 //env
 const SECRET = 'chingubears3';
 
+// Register new user
 router.route('/user/register').post(function(req, res) {
     if(req.body.constructor === Object && Object.keys(req.body).length === 0)
         return res.status(400).send('Empty body');
@@ -30,6 +31,7 @@ router.route('/user/register').post(function(req, res) {
         });
 });
 
+// Get logged in user's information
 router.route('/user/testget').get(function(req, res) {
     var token = req.headers['access_token'];
     if (!token) 
@@ -49,6 +51,7 @@ router.route('/user/testget').get(function(req, res) {
     });
 });
 
+// Add one color palette to user's liked palettes
 router.route('/user/palettes/add').put(async function (req, res) {
     var token = req.headers['access_token'];
     if (!token) 
@@ -80,6 +83,7 @@ router.route('/user/palettes/add').put(async function (req, res) {
     });
 })
 
+// Remove one color palette from user's liked palettes
 router.route('/user/palettes/remove').put(async function (req, res) {
     var token = req.headers['access_token'];
     if (!token) 
@@ -112,6 +116,7 @@ router.route('/user/palettes/remove').put(async function (req, res) {
 })
 
 
+// Get all color palettes from database
 router.get("/palettes", async(request, response) => {
     var token = request.headers['access_token'];
     if (!token) 
@@ -125,6 +130,7 @@ router.get("/palettes", async(request, response) => {
     });
 })
 
+// Get one color palette with it's ID
 router.get("/palettes/:id", async(request, response) => {
     var token = request.headers['access_token'];
     if (!token) 
@@ -143,6 +149,7 @@ router.get("/palettes/:id", async(request, response) => {
     });
 })
 
+// Generate a new color palette
 router.post("/palettes/generate", async(request, response) => {
     var token = request.headers['access_token'];
     if (!token) 
@@ -173,6 +180,7 @@ router.post("/palettes/generate", async(request, response) => {
     });
 });
 
+// Update a color palette's tags
 router.put("/palettes/:id/update", async(request, response) => {
     var token = request.headers['access_token'];
     if (!token) 
@@ -184,9 +192,6 @@ router.put("/palettes/:id/update", async(request, response) => {
         const body = request.body;
         const colorPalette = await ColorPalette.findOne({colorPaletteID: request.body.colorPaletteID});
         
-        colorPalette.colors = body.colors;
-        colorPalette.likes = body.likes;
-        colorPalette.colorPaletteID = body.colorPaletteID;
         colorPalette.tags = body.tags;
 
         await colorPalette.save();
