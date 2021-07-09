@@ -12,6 +12,7 @@ interface PaletteProps {
   setColors: ([]) => void;
   deleteColor: () => void;
   toggleLock: () => void;
+  isMobile: boolean;
 }
 
 const Palette = ({
@@ -19,6 +20,7 @@ const Palette = ({
   setColors,
   deleteColor,
   toggleLock,
+  isMobile,
 }: PaletteProps) => {
   const onDragEnd = (result: any) => {
     if (!result.destination) return;
@@ -45,6 +47,7 @@ const Palette = ({
                 deleteColor={deleteColor}
                 toggleLock={toggleLock}
                 dragHandleProps={provided.dragHandleProps}
+                isMobile={isMobile}
               />
             </div>
           )}
@@ -56,18 +59,33 @@ const Palette = ({
   return (
     <div className="Palette">
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="characters" direction="horizontal">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              style={{ width: '100%', display: 'flex' }}
-            >
-              {displayDraggablePanels()}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
+        {isMobile ? (
+          <Droppable droppableId="characters">
+            {(provided) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{ width: '100%' }}
+              >
+                {displayDraggablePanels()}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        ) : (
+          <Droppable droppableId="characters" direction="horizontal">
+            {(provided) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{ width: '100%', display: 'flex' }}
+              >
+                {displayDraggablePanels()}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        )}
       </DragDropContext>
     </div>
   );

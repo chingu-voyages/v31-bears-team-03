@@ -17,6 +17,7 @@ interface ColorPaneProps {
   deleteColor: () => void;
   toggleLock: () => void;
   dragHandleProps: any;
+  isMobile: boolean;
 }
 
 const ColorPane = ({
@@ -29,6 +30,7 @@ const ColorPane = ({
   deleteColor,
   toggleLock,
   dragHandleProps,
+  isMobile
 }: ColorPaneProps) => {
   const [light, setLight] = useState(false);
   const [showHue, setShowHue] = useState(false);
@@ -138,10 +140,14 @@ const ColorPane = ({
     <div>
       <div
         className="h-full "
-        style={{
+        style={isMobile ? {
+          width: '100vw',
+          background: `${color}`,
+          height: `${92 / length}vh`,
+        } : {
           width: `${100 / length}vw`,
           background: `${color}`,
-          height: '100vh',
+          height: '92vh',
         }}
       >
         {showHue ? (
