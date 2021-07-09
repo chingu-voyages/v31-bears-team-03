@@ -1,12 +1,14 @@
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
-const userRouter = require("express").Router()
+const router = require("express").Router()
+const ColorPalette = require('../models/ColorPalette.model')
 const User = require('../models/User.model')
 
 //env
 const SECRET = 'chingubears3';
 
-userRouter.route('/register').post(function(req, res) {
+// Register new user
+router.route('/user/register').post(function(req, res) {
     if(req.body.constructor === Object && Object.keys(req.body).length === 0)
         return res.status(400).send('Empty body');
 
@@ -29,7 +31,8 @@ userRouter.route('/register').post(function(req, res) {
         });
 });
 
-userRouter.route('/testget').get(function(req, res) {
+// Get logged in user's information
+router.route('/user/testget').get(function(req, res) {
     var token = req.headers['access_token'];
     if (!token) 
         return res.status(401).send("No token found");
@@ -48,7 +51,8 @@ userRouter.route('/testget').get(function(req, res) {
     });
 });
 
-userRouter.route('/palettes/add').put(async function (req, res) {
+// Add one color palette to user's liked palettes
+router.route('/user/palettes/add').put(async function (req, res) {
     var token = req.headers['access_token'];
     if (!token) 
         return res.status(401).send("No token found");
@@ -63,6 +67,24 @@ userRouter.route('/palettes/add').put(async function (req, res) {
         console.log(user)
         if (!user.likedPalettes.includes(paletteToAdd)) {
             user.likedPalettes = [...user.likedPalettes, paletteToAdd]
+            
+            // Increment the likes of the color palette
+            let colorPalette = await ColorPalette.findOne({colorPaletteID: paletteToAdd});
+
+            if(colorPalette) {
+                colorPalette.likes = colorPalette.likes + 1;
+            } else {
+                colorPalette = new ColorPalette({
+                    colors: body.colors,
+                    likes: body.likes || 0,
+                    colorPaletteID: body.colorPaletteID,
+                    tags: [] || body.tags
+                });
+            
+            }
+
+            await colorPalette.save();
+            
         } else {
             return res.status(400).send('Color palette already in saved palettes');
         }
@@ -72,7 +94,8 @@ userRouter.route('/palettes/add').put(async function (req, res) {
     });
 })
 
-userRouter.route('/palettes/remove').put(async function (req, res) {
+// Remove one color palette from user's liked palettes
+router.route('/user/palettes/remove').put(async function (req, res) {
     var token = req.headers['access_token'];
     if (!token) 
         return res.status(401).send("No token found");
@@ -87,6 +110,13 @@ userRouter.route('/palettes/remove').put(async function (req, res) {
         console.log(user)
         if (user.likedPalettes.includes(paletteToAdd)) {
             user.likedPalettes = user.likedPalettes.filter(palette => palette != paletteToAdd)
+
+            // Decrement color palette likes by 1
+            const colorPalette = await ColorPalette.findOne({colorPaletteID: paletteToAdd});
+            console.log(colorPalette)
+            colorPalette.likes = colorPalette.likes - 1;
+            await colorPalette.save();
+
         } else {
             return res.status(400).send('Color palette not in saved palettes');
         }
@@ -96,4 +126,43 @@ userRouter.route('/palettes/remove').put(async function (req, res) {
     });
 })
 
-module.exports = userRouter;
+
+// Get all color palettes from database
+router.get("/palettes", async(request, response) => {
+    const colorPalettes = await ColorPalette.find({});
+    response.json(colorPalettes.map((colorPalette) => colorPalette.toJSON()));
+})
+
+
+// Generate a new color palette
+router.post("/palettes/generate", async(request, response) => {
+    var token = request.headers['access_token'];
+    if (!token) 
+        return response.status(401).send("No token found");
+    jwt.verify(token, SECRET, async function(err, decoded) {
+        if (err) 
+            return response.status(500).send('Failed to authenticate token');
+
+        const body = request.body;
+
+        const existingPalette = await ColorPalette.findOne({colorPaletteID: request.body.colorPaletteID});
+
+        if (existingPalette) {
+            response.json({error: "color palette already generated"})
+        } else {
+
+            const colorPalette = new ColorPalette({
+                colors: body.colors,
+                likes: body.likes || 0,
+                colorPaletteID: body.colorPaletteID,
+                tags: [] || body.tags
+            });
+        
+            await colorPalette.save();
+        
+            response.json(colorPalette);
+        }
+    });
+});
+
+module.exports = router;

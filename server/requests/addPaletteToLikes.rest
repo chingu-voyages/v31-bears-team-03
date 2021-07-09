@@ -1,7 +1,0 @@
-PUT http://localhost:4000/user/palettes/remove
-Content-Type: application/json
-
-{
-    "email": "validemail23@gmail.com",
-    "colorPaletteID": "#f4a261"
-}
