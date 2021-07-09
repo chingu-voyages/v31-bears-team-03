@@ -161,6 +161,7 @@ const ColorPane = ({
                   setNewColorButton={setNewColorButton}
                   setShowHueButton={setShowHueButton}
                   key={i}
+                  isMobile={isMobile}
                 />
               );
             })}

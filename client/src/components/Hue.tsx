@@ -6,6 +6,7 @@ const Hue = ({
   length,
   setNewColorButton,
   setShowHueButton,
+  isMobile
 }: any) => {
   const [light, setLight] = useState(false);
   const [hover, setHovered] = useState(false);
@@ -46,11 +47,19 @@ const Hue = ({
         setNewColorButton(color);
         setShowHueButton(false);
       }}
-      style={{
+      style={isMobile ? {
+        backgroundColor: `${color}`,
+        width: `${100/ 20}vw`,
+        height: `${92 / length}vh`,
+        writingMode: 'vertical-lr',
+        textOrientation: 'upright'
+      } : 
+      {
         backgroundColor: `${color}`,
         height: `${100 / 20}vh`,
         width: `${100 / length}vw`,
-      }}
+      }
+    }
     >
       {light ? (
         <p style={{ fontSize: '1.5em', color: 'white' }}>
