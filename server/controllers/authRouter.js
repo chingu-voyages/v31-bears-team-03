@@ -57,4 +57,17 @@ router.route('/auth/facebook/redirect').get(passport.authenticate("facebook"), (
                 access_token: token });
 });
 
+router.route('/auth/twitter').get(passport.authenticate("twitter"));
+
+router.route('/auth/twitter/redirect').get(passport.authenticate("twitter"), (req, res)=> {
+    var token = jwt.sign({ id: req.user.id }, SECRET, {
+        expiresIn: 86400 // 24 hours
+    });
+    req.user.access_token = token;
+    res.send({  likedPalettes: req.user.likedPalettes,
+                name: req.user.name,
+                email: req.user.email,
+                access_token: token });
+});
+
 module.exports = router;

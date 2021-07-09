@@ -23,6 +23,9 @@ let UserSchema = new Schema({
     facebookid: {
         type: String
     },
+    twitterid: {
+        type: String
+    },
     provider: { 
         type: String
     }
