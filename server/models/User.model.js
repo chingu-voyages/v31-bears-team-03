@@ -20,6 +20,9 @@ let UserSchema = new Schema({
     githubid: {
         type: String
     },
+    facebookid: {
+        type: String
+    },
     provider: { 
         type: String
     }

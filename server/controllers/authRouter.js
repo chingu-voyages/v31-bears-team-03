@@ -44,4 +44,17 @@ router.route('/auth/github/redirect').get(passport.authenticate("github"), (req,
                 access_token: token });
 });
 
+router.route('/auth/facebook').get(passport.authenticate("facebook"));
+
+router.route('/auth/facebook/redirect').get(passport.authenticate("facebook"), (req, res)=> {
+    var token = jwt.sign({ id: req.user.id }, SECRET, {
+        expiresIn: 86400 // 24 hours
+    });
+    req.user.access_token = token;
+    res.send({  likedPalettes: req.user.likedPalettes,
+                name: req.user.name,
+                email: req.user.email,
+                access_token: token });
+});
+
 module.exports = router;

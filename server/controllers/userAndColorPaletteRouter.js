@@ -69,9 +69,20 @@ router.route('/user/palettes/add').put(async function (req, res) {
             user.likedPalettes = [...user.likedPalettes, paletteToAdd]
             
             // Increment the likes of the color palette
-            const colorPalette = await ColorPalette.findOne({colorPaletteID: paletteToAdd});
-            console.log(colorPalette)
-            colorPalette.likes = colorPalette.likes + 1;
+            let colorPalette = await ColorPalette.findOne({colorPaletteID: paletteToAdd});
+
+            if(colorPalette) {
+                colorPalette.likes = colorPalette.likes + 1;
+            } else {
+                colorPalette = new ColorPalette({
+                    colors: body.colors,
+                    likes: body.likes || 0,
+                    colorPaletteID: body.colorPaletteID,
+                    tags: [] || body.tags
+                });
+            
+            }
+
             await colorPalette.save();
             
         } else {
@@ -105,7 +116,7 @@ router.route('/user/palettes/remove').put(async function (req, res) {
             console.log(colorPalette)
             colorPalette.likes = colorPalette.likes - 1;
             await colorPalette.save();
-            
+
         } else {
             return res.status(400).send('Color palette not in saved palettes');
         }
@@ -118,36 +129,10 @@ router.route('/user/palettes/remove').put(async function (req, res) {
 
 // Get all color palettes from database
 router.get("/palettes", async(request, response) => {
-    var token = request.headers['access_token'];
-    if (!token) 
-        return response.status(401).send("No token found");
-    jwt.verify(token, SECRET, async function(err, decoded) {
-        if (err) 
-            return res.status(500).send('Failed to authenticate token');
-
-        const colorPalettes = await ColorPalette.find({});
-        response.json(colorPalettes.map((colorPalette) => colorPalette.toJSON()));
-    });
+    const colorPalettes = await ColorPalette.find({});
+    response.json(colorPalettes.map((colorPalette) => colorPalette.toJSON()));
 })
 
-// Get one color palette with it's ID
-router.get("/palettes/:id", async(request, response) => {
-    var token = request.headers['access_token'];
-    if (!token) 
-        return response.status(401).send("No token found");
-    jwt.verify(token, SECRET, async function(err, decoded) {
-        if (err) 
-            return response.status(500).send('Failed to authenticate token');
-
-        const colorPalette = await ColorPalette.findOne({colorPaletteID: request.params.id});
-
-        if(colorPalette) {
-            response.json(colorPalette.toJSON());
-        } else {
-            response.status(404).send("Color palette has not been generated");
-        }
-    });
-})
 
 // Generate a new color palette
 router.post("/palettes/generate", async(request, response) => {
@@ -179,24 +164,5 @@ router.post("/palettes/generate", async(request, response) => {
         }
     });
 });
-
-// Update a color palette's tags
-router.put("/palettes/:id/update", async(request, response) => {
-    var token = request.headers['access_token'];
-    if (!token) 
-        return response.status(401).send("No token found");
-    jwt.verify(token, SECRET, async function(err, decoded) {
-        if (err) 
-            return response.status(500).send('Failed to authenticate token');
-
-        const body = request.body;
-        const colorPalette = await ColorPalette.findOne({colorPaletteID: request.body.colorPaletteID});
-        
-        colorPalette.tags = body.tags;
-
-        await colorPalette.save();
-        response.json(colorPalette);
-    });
-})
 
 module.exports = router;
