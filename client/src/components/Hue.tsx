@@ -49,8 +49,10 @@ const Hue = ({
       }}
       style={isMobile ? {
         backgroundColor: `${color}`,
-        width: `${100 / 20}vw`,
-        height: `${100 / length}vh`,
+        width: `${100/ 20}vw`,
+        height: `${92 / length}vh`,
+        writingMode: 'vertical-lr',
+        textOrientation: 'upright'
       } : 
       {
         backgroundColor: `${color}`,
