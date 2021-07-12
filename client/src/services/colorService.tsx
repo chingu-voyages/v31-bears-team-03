@@ -1,9 +1,9 @@
 //@ts-nocheck
-import axios from "axios";
-import chroma from "chroma-js";
-import { v4 as uuidv4 } from "uuid";
+import axios from 'axios';
+import chroma from 'chroma-js';
+import { v4 as uuidv4 } from 'uuid';
 
-const baseUrl = "https://www.thecolorapi.com/";
+const baseUrl = 'https://www.thecolorapi.com/';
 
 type Colors = { id: string; color: string; lock: boolean }[];
 
@@ -20,7 +20,11 @@ const generatePalette = async (colorMode: string) => {
   const returnedArray = response.data.colors;
   const newArray = [];
   for (let i = 0; i < returnedArray.length; i++) {
-    newArray.push({ id: uuidv4(), color: returnedArray[i].hex.value, lock: false });
+    newArray.push({
+      id: uuidv4(),
+      color: returnedArray[i].hex.value,
+      lock: false,
+    });
   }
   return newArray;
 };
@@ -28,16 +32,16 @@ const generatePalette = async (colorMode: string) => {
 const getColorSlug = (colors: Colors) => {
   return colors
     .map((el) => el.color)
-    .join("")
-    .replaceAll("#", "-")
+    .join('')
+    .replaceAll('#', '-')
     .slice(1);
 };
 
 const getColorsArrFromSlug = (colorSlug: string) => {
   const colorsArr: Colors = [];
   colorSlug
-    .split("-")
-    .forEach((el) => colorsArr.push({ id: uuidv4(), color: "#" + el }));
+    .split('-')
+    .forEach((el) => colorsArr.push({ id: uuidv4(), color: '#' + el }));
   return colorsArr;
 };
 

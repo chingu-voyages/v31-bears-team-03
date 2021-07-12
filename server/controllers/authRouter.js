@@ -20,16 +20,14 @@ router.route('/auth/google').get(passport.authenticate("google", {
     scope: ["email", "profile"]
 }));
 
-router.route('/auth/google/redirect').get(passport.authenticate("google"),(req,res)=> {
-    var token = jwt.sign({ id: req.user.id }, SECRET, {
-        expiresIn: 86400 // 24 hours
-    });
-    req.user.access_token = token;
-    res.send({  likedPalettes: req.user.likedPalettes,
-                name: req.user.name,
-                email: req.user.email,
-                access_token: token });
-});
+router.get(
+    '/auth/google/redirect',
+    passport.authenticate('google', {
+      failureMessage: 'Cannot login to Google, please try again later!',
+      failureRedirect: 'http://localhost:3000/login/error',
+      successRedirect: 'http://localhost:3000/login/success',
+    })
+  );
 
 router.route('/auth/github').get(passport.authenticate("github"));
 
@@ -68,6 +66,12 @@ router.route('/auth/twitter/redirect').get(passport.authenticate("twitter"), (re
                 name: req.user.name,
                 email: req.user.email,
                 access_token: token });
+});
+
+router.route('/auth/logout').get((req, res)=> {
+    console.log('req', req)
+    req.logout();
+    res.redirect('/user');
 });
 
 module.exports = router;

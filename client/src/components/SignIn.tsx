@@ -1,7 +1,11 @@
 //@ts-nocheck
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
+import { Link, Redirect } from 'react-router-dom';
+import GoogleButton from 'react-google-button';
+import { useAuth } from '../context/AuthContext';
 
 export default function SignUp({
   showSignInModal,
@@ -9,6 +13,7 @@ export default function SignUp({
   setNavbarOpen,
 }) {
   const modalRef = useRef();
+  const { user, setUser } = useAuth();
 
   const closeModal = () => {
     setShowSignInModal(false);
@@ -30,6 +35,47 @@ export default function SignUp({
     // if success
     setShowSignInModal(false);
     setNavbarOpen(false);
+  };
+
+  const fetchAuthUser = async () => {
+    const response = await axios
+      .get('http://localhost:4000/auth/user', { withCredentials: true })
+      .catch((err) => {
+        console.log('err', err);
+      });
+
+    if (response && response.data) {
+      console.log('User: ', response.data);
+      setUser(response.data);
+    }
+  };
+
+  const redirectToGoogleSSO = async () => {
+    setNavbarOpen(false);
+    setShowSignInModal(false);
+    let timer: NodeJS.Timeout | null = null;
+    const googleLoginURL = 'http://localhost:4000/auth/google';
+    const newWindow = window.open(
+      googleLoginURL,
+      '_blank',
+      'width=500,height=600'
+    );
+
+    if (newWindow) {
+      timer = setInterval(() => {
+        if (newWindow.closed) {
+          console.log("Yay we're authenticated");
+          fetchAuthUser();
+          if (timer) clearInterval(timer);
+        }
+      }, 500);
+    }
+  };
+
+  const handleClickGoogle = () => {
+    setNavbarOpen(false);
+    setShowSignInModal(false);
+    redirectToGoogleSSO();
   };
 
   return (
@@ -74,7 +120,9 @@ export default function SignUp({
                     <div className="pt-3 pb-9 text-center">
                       <h1 className="text-3xl">Sign In</h1>
                     </div>
-
+                    <div className="flex justify-center mb-4">
+                      <GoogleButton onClick={handleClickGoogle} />
+                    </div>
                     <div className="py-3">
                       <Field name="username">
                         {({ field, form }) => (

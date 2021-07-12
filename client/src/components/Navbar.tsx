@@ -4,6 +4,9 @@ import { NavLink, useLocation } from 'react-router-dom';
 import colorService from '../services/colorService';
 import SignUp from './SignUp';
 import SignIn from './SignIn';
+import jwt from 'jsonwebtoken';
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
 
 export default function Navbar({ colors }) {
   const [navbarOpen, setNavbarOpen] = useState(false);
@@ -11,7 +14,7 @@ export default function Navbar({ colors }) {
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
 
-  const isLoggedIn = false;
+  const { user, setUser } = useAuth();
 
   let location = useLocation();
   const targetRef = useRef();
@@ -29,6 +32,19 @@ export default function Navbar({ colors }) {
     setNavbarOpen(false);
   }, [location]);
 
+  const handleLogout = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/auth/logout', {
+        withCredentials: true,
+      });
+      if (!response.data) {
+        setUser(null);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
   return (
     <>
       <nav
@@ -36,14 +52,14 @@ export default function Navbar({ colors }) {
         className="relative flex flex-wrap items-center justify-between z-50 px-2 py-3 bg-white mb-3 shadow-lg"
       >
         <div className="flex w-full px-4  flex-wrap items-center justify-between">
-          <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
+          <div className="w-full relative flex justify-between md:w-auto md:static md:block md:justify-start">
             <div className="mx-4 self-center">
               <h1 className="text-2xl">
                 <NavLink to="/">UNNAMED APP</NavLink>
               </h1>
             </div>
             <button
-              className="text-gray-800 cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
+              className="text-gray-800 cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block md:hidden outline-none focus:outline-none"
               type="button"
               onClick={() => setNavbarOpen(!navbarOpen)}
             >
@@ -65,9 +81,9 @@ export default function Navbar({ colors }) {
           </div>
           <div
             className={
-              ' lg:flex flex-grow items-center right-0 ' +
+              ' md:flex flex-grow items-center right-0 ' +
               (navbarOpen
-                ? ` absolute lg:flex bg-white border-t border-gray-200 shadow-md `
+                ? ` absolute md:flex bg-white border-t border-gray-200 shadow-md `
                 : ' hidden ')
             }
             style={{
@@ -75,7 +91,7 @@ export default function Navbar({ colors }) {
             }}
           >
             <ul
-              className={`flex flex-col lg:flex-row list-none lg:ml-auto ${
+              className={`flex flex-col md:flex-row list-none md:ml-auto ${
                 navbarOpen ? ' ' : 'items-center'
               }`}
             >
@@ -89,15 +105,6 @@ export default function Navbar({ colors }) {
                 </NavLink>
               </li>
               <li className="text-left">
-                <NavLink to="/demo">
-                  <div
-                    className={`px-3 py-2 flex items-center text-base uppercase font-medium leading-snug text-gray-800 hover:opacity-75`}
-                  >
-                    <div className="mx-4">Demo</div>
-                  </div>
-                </NavLink>
-              </li>
-              <li className="text-left">
                 <NavLink to="/explore">
                   <div
                     className={`px-3 py-2 flex items-center text-base uppercase font-medium leading-snug text-gray-800 hover:opacity-75`}
@@ -107,13 +114,18 @@ export default function Navbar({ colors }) {
                 </NavLink>
               </li>
 
-              {isLoggedIn ? (
+              {user ? (
                 <li className="text-left">
                   <div
                     className={`px-3 py-2 flex items-center text-base uppercase font-medium leading-snug text-gray-800 hover:opacity-75`}
                   >
                     <div className="mx-4">
-                      <p>Logout</p>
+                      <button
+                        onClick={handleLogout}
+                        className="text-base uppercase font-medium leading-snug text-gray-800 hover:opacity-75"
+                      >
+                        Logout{' '}
+                      </button>
                     </div>
                   </div>
                 </li>

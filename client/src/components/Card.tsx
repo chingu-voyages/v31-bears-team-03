@@ -4,9 +4,12 @@ import { useHistory } from 'react-router-dom';
 import colorService from '../services/colorService';
 import { v4 as uuidv4 } from 'uuid';
 import { TrashIcon } from './Icons';
+import exploreService from '../services/exploreService';
+import { useAuth } from '../context/AuthContext';
 
-const Card = ({ palette, setColors, mockUser }) => {
+const Card = ({ palette, setColors, user, getData }) => {
   const history = useHistory();
+  const { setUser } = useAuth();
 
   const handleClickView = () => {
     const colorSlug = colorService.getColorSlug(palette.colors);
@@ -15,9 +18,18 @@ const Card = ({ palette, setColors, mockUser }) => {
     history.push(`palette/${colorSlug}`);
   };
 
-  const handleClickDelete = () => {
+  const handleClickDelete = async () => {
+    // TODO: fix user palette still appearing when click trash icon
+    // when in My Palettes view
     if (window.confirm('Are you sure you want to delete this palette?')) {
-      // then delete from users liked palettes in db
+      try {
+        const response = await exploreService.deletePalette(palette);
+        if (!response) return;
+        setUser(response.data);
+        getData();
+      } catch (error) {
+        console.log('error', error);
+      }
     }
   };
 
@@ -41,7 +53,7 @@ const Card = ({ palette, setColors, mockUser }) => {
             <div>{palette.likes} likes</div>
             <button onClick={handleClickView}>View</button>
           </div>
-          {mockUser?.likedPalettes.includes(palette.id) ? (
+          {user?.likedPalettes?.includes(palette.colorPaletteID) ? (
             <button onClick={handleClickDelete}>
               <TrashIcon />
             </button>

@@ -23,10 +23,10 @@ module.exports = () => {
         done(null, user.id);
     });
     
-    passport.deserializeUser((id, done) => {
-        User.findById(id).then(user => {
-            done(null, user);
-        });
+    passport.deserializeUser(async (id, done) => {
+      await User.findById(id).then((user) => {
+        done(null, user);
+      });
     });
     
     passport.use(

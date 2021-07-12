@@ -1,6 +1,7 @@
 import React from 'react';
 import exploreService from '../services/exploreService';
 import useDropdownMenu from 'react-accessible-dropdown-menu-hook';
+import { useAuth } from '../context/AuthContext';
 
 const colorModes: { title: string; mode: string }[] = [
   { title: 'Analogic', mode: 'analogic' },
@@ -37,8 +38,18 @@ const OptionsBar = ({
   const numberOfItems = colorModes.length;
   const { buttonProps, isOpen, setIsOpen } = useDropdownMenu(numberOfItems);
 
-  const saveColor = () => {
-    exploreService.addPalette(colors);
+  const { user, setUser } = useAuth();
+
+  // TODO: add toast notification when user clicks Save
+
+  const saveColor = async () => {
+    try {
+      const response = await exploreService.addPalette(colors);
+      if (!response) return;
+      setUser(response.data);
+    } catch (error) {
+      console.log('error', error);
+    }
   };
 
   const formatString = () => {
@@ -106,9 +117,11 @@ const OptionsBar = ({
         Generate
       </button>
       {displayAdd()}
-      <button style={{ marginRight: '2%' }} onClick={saveColor}>
-        Save
-      </button>
+      {user && (
+        <button style={{ marginRight: '2%' }} onClick={saveColor}>
+          Save
+        </button>
+      )}
       <button
         style={{ marginRight: '2%' }}
         onClick={() => {

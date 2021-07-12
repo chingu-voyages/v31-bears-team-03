@@ -3,12 +3,12 @@ import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
 import './App.css';
 import chroma from 'chroma-js';
 import { v4 as uuidv4 } from 'uuid';
-import DemoPage from './components/DemoPage';
 import LandingPage from './components/LandingPage';
 import Navbar from './components/Navbar';
 import PalettePage from './components/PalettePage';
 import ExplorePage from './components/ExplorePage';
 import colorService from './services/colorService';
+import { LoginSuccess } from './components/LoginSuccess';
 
 interface IState {
   colors: {
@@ -169,16 +169,10 @@ function App() {
             toggleLock={toggleLock}
           />
         </Route>
-        <Route exact path={`/demo/:colorSlug}`}>
-          <DemoPage
-            colors={colors}
-            setColorMode={setColorMode}
-            generatePalette={generatePalette}
-          />
-        </Route>
         <Route exact path="/explore">
           <ExplorePage setColors={setColors} />
         </Route>
+        <Route exact path="/login/success" component={LoginSuccess} />
       </Switch>
     </div>
   );

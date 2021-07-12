@@ -51,20 +51,25 @@ router.route('/user/testget').get(function(req, res) {
     });
 });
 
+router.route('/user').get(function(req, res) {
+    console.log('/user req.user', req.user)
+    res.json(req.user);
+});
+
 // Add one color palette to user's liked palettes
 router.route('/user/palettes/add').put(async function (req, res) {
-    var token = req.headers['access_token'];
-    if (!token) 
-        return res.status(401).send("No token found");
+    // var token = req.headers['access_token'];
+    // console.log('token', token)
+    // if (!token) return res.status(401).send("No token found");
 
-    jwt.verify(token, SECRET, async function(err, decoded) {
-        if (err) 
-            return res.status(500).send('Failed to authenticate token');
+    // jwt.verify(token, SECRET, async function(err, decoded) {
+        // if (err) 
+        //     return res.status(500).send('Failed to authenticate token');
 
         const body = req.body;
         const paletteToAdd = body.colorPaletteID
-        const user = await User.findOne({ email: req.body.email });
-        console.log(user)
+        // const user = await User.findOne({ email: req.body.email });
+        const user = req.user
         if (!user.likedPalettes.includes(paletteToAdd)) {
             user.likedPalettes = [...user.likedPalettes, paletteToAdd]
             
@@ -86,35 +91,34 @@ router.route('/user/palettes/add').put(async function (req, res) {
             await colorPalette.save();
             
         } else {
-            return res.status(400).send('Color palette already in saved palettes');
-        }
+            return res.send('Color palette already in saved palettes');
+        } 
         
         await user.save();
         res.json(user);
-    });
+    // });
 })
 
 // Remove one color palette from user's liked palettes
 router.route('/user/palettes/remove').put(async function (req, res) {
-    var token = req.headers['access_token'];
-    if (!token) 
-        return res.status(401).send("No token found");
+    // var token = req.headers['access_token'];
+    // if (!token) 
+    //     return res.status(401).send("No token found");
 
-    jwt.verify(token, SECRET, async function(err, decoded) {
-        if (err) 
-            return res.status(500).send('Failed to authenticate token');
+    // jwt.verify(token, SECRET, async function(err, decoded) {
+        // if (err) 
+        //     return res.status(500).send('Failed to authenticate token');
 
         const body = req.body;
         const paletteToAdd = body.colorPaletteID
-        const user = await User.findOne({ email: req.body.email });
-        console.log(user)
+        const user = req.user
+        console.log('user', user)
         if (user.likedPalettes.includes(paletteToAdd)) {
             user.likedPalettes = user.likedPalettes.filter(palette => palette != paletteToAdd)
-
             // Decrement color palette likes by 1
             const colorPalette = await ColorPalette.findOne({colorPaletteID: paletteToAdd});
             console.log(colorPalette)
-            colorPalette.likes = colorPalette.likes - 1;
+            colorPalette.likes = Math.max(0, colorPalette.likes - 1);
             await colorPalette.save();
 
         } else {
@@ -123,7 +127,7 @@ router.route('/user/palettes/remove').put(async function (req, res) {
         
         await user.save();
         res.json(user);
-    });
+    // });
 })
 
 
